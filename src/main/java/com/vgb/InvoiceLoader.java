@@ -64,7 +64,7 @@ public class InvoiceLoader {
 						salesPersonuid = UUID.fromString(salespersonidstr);
 						salesPerson = person.get(salesPersonuid);
 					}catch(IllegalArgumentException e) {
-						
+						System.err.println("SalesPerson uuid: " + salespersonidstr);
 					}
 					
 					

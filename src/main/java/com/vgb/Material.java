@@ -7,30 +7,41 @@ public class Material extends Item{
 	
 	
 	private String unit;
-	
-
+	private double quantity;
+	private final static double TAX_RATE = 0.0715;
 	
 	public Material(UUID uuid, String name, String unit, double costPerUnit) {
 		super(uuid, name, costPerUnit);
 		this.unit = unit;
 	}
 	
+	public Material(Material material,  double quantity) {
+		super(material.getUUID(), material.getName(), material.getPrice());
+		this.quantity = quantity;
+	}
+	
 	public String getUnit() {
 		return unit;
 	}
-	
 
+
+	public double calculatePrice() {
+		return super.getPrice() * this.getQuantity();
+	}
+	
 	@Override
 	public double getTaxes() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return calculatePrice() * TAX_RATE ;
 	}
-
-
+	
 	@Override
 	public double getTotal() {
-		// TODO Auto-generated method stub
-		return 0;
+		return roundToCent(calculatePrice() + getTaxes());
+	}
+
+	public double getQuantity() {
+		return quantity;
 	}
 	
 	
