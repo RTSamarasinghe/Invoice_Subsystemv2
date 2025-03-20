@@ -9,8 +9,9 @@ public class Test {
 		
 		
 		Map<UUID, InvoiceItem> invoiceItems = InvoiceItemLoader.loadInvoiceItem();	
-		Rental r = (Rental) invoiceItems.get(UUID.fromString("9d1bef3d-e36b-45eb-a308-40b3a1d7df14")).getItem();
+		Item r =  invoiceItems.get(UUID.fromString("9d1bef3d-e36b-45eb-a308-40b3a1d7df14")).getItem();
 		System.out.println(r.getSubTotal());
+		System.out.println(r.getClass());
 		}
 	
 }

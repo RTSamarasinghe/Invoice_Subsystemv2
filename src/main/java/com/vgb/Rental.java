@@ -27,13 +27,14 @@ public class Rental extends Equipment{
 		
 	}
 	
-	public double calculatePrice() {
+	@Override
+	public double getSubTotal() {
 		return getHours() * calculateRate();
 	}
 	
 	@Override
 	public double getTotal() {
-		return getTaxes() + calculatePrice();
+		return getTaxes() + getSubTotal();
 	}
 
 
