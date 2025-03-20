@@ -1,5 +1,5 @@
 15
-uuid,type,name,field,
+uuid,type,name,field,,
 146475e4-241a-4ac4-a571-51ec95794624,E,Excavator,EX300Z,365000,
 e9412412-89bb-4a57-af58-6b7c2b643994,E,Loader,LD500X,142000,
 f871f128-23c8-41e8-a755-861ae74d8d07,E,Roller,RLT120,4800,
