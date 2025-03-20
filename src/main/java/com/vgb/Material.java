@@ -24,20 +24,20 @@ public class Material extends Item{
 		return unit;
 	}
 
-
-	public double calculatePrice() {
+	@Override
+	public double getSubTotal() {
 		return super.getPrice() * this.getQuantity();
 	}
 	
 	@Override
 	public double getTaxes() {
 		
-		return calculatePrice() * TAX_RATE ;
+		return getSubTotal() * TAX_RATE ;
 	}
 	
 	@Override
 	public double getTotal() {
-		return roundToCent(calculatePrice() + getTaxes());
+		return roundToCent(getSubTotal() + getTaxes());
 	}
 
 	public double getQuantity() {

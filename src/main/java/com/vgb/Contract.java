@@ -31,4 +31,9 @@ public class Contract extends Item {
 	    public double getTotal() {
 	        return contractprice;
 	    }
+
+		@Override
+		public double getSubTotal() {
+			return contractprice;
+		}
 	}

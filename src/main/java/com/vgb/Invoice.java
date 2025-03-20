@@ -57,6 +57,13 @@ public class Invoice implements Expenses {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+	@Override
+	public double getSubTotal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
     
 	
     

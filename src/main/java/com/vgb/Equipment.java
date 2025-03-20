@@ -30,6 +30,12 @@ public class Equipment extends Item {
 		return roundToCent(super.getPrice() + this.getTaxes());
 	}
 
+
+	@Override
+	public double getSubTotal() {
+		return 0;
+	}
+
 	
 	
 }
