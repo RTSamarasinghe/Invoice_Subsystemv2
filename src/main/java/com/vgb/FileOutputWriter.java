@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class FileOutputWriter {
     
-    private static void writeToFile(String content, String filePath) throws IOException {
+    static void writeToFile(String content, String filePath) throws IOException {
         // Create directories if they don't exist
         File file = new File(filePath);
         if (file.getParentFile() != null) {
