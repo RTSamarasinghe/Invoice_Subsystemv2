@@ -18,6 +18,7 @@ public class Material extends Item{
 	public Material(Material material,  double quantity) {
 		super(material.getUUID(), material.getName(), material.getPrice());
 		this.quantity = quantity;
+		this.unit = material.getUnit();
 	}
 	
 	public String getUnit() {
@@ -32,7 +33,7 @@ public class Material extends Item{
 	@Override
 	public double getTaxes() {
 		
-		return getSubTotal() * TAX_RATE ;
+		return roundToCent(getSubTotal() * TAX_RATE );
 	}
 	
 	@Override
@@ -42,6 +43,12 @@ public class Material extends Item{
 
 	public double getQuantity() {
 		return quantity;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s (Material) %s \n %20s @ $ %s/per %s \n %70s $%s $%s $%s ", this.getUUID(), this.getName(),
+				this.getQuantity(), this.getPrice(), this.getUnit()," ", this.getSubTotal(), this.getTaxes(), this.getTotal());
 	}
 	
 	

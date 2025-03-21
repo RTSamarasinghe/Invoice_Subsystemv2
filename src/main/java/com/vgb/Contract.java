@@ -36,4 +36,10 @@ public class Contract extends Item {
 		public double getSubTotal() {
 			return contractprice;
 		}
+		
+		@Override
+		public String toString() {
+			return String.format("%s (Contract) %s \n %70s $%s $%s $%12s ", this.getUUID(), this.getName(), " ",
+					this.getSubTotal(), this.getTaxes(), this.getTotal());
+		}
 	}

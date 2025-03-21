@@ -3,7 +3,9 @@ package com.vgb;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -12,12 +14,12 @@ public class InvoiceItemLoader {
 	
 	public static final String FILE_PATH = "data/InvoiceItems.csv";
 	
-public static Map<UUID, InvoiceItem> loadInvoiceItem(){
+public static Map<UUID, List<InvoiceItem>> loadInvoiceItem(){
 		
 		Map<UUID, Invoice> invoices = InvoiceLoader.loadInvoice();
 		Map<UUID, Item> items = ItemLoader.loadItem();
 		
-		Map<UUID, InvoiceItem> invoiceItems = new HashMap<>();
+		Map<UUID, List<InvoiceItem>> invoiceItems = new HashMap<>();
 		String line = null;
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
 			int numRecords = Integer.parseInt(s.nextLine());
@@ -105,7 +107,11 @@ public static Map<UUID, InvoiceItem> loadInvoiceItem(){
 							invItem = new InvoiceItem(invoice, item);
 						}
 					}
-					invoiceItems.put(invoiceuuid,invItem);
+					if (!invoiceItems.containsKey(invoiceuuid)) {
+					    invoiceItems.put(invoiceuuid, new ArrayList<>());
+					}
+
+					invoiceItems.get(invoiceuuid).add(invItem);
 				}
 				
 			}

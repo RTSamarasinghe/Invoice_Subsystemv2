@@ -34,17 +34,16 @@ public class Company {
 		return contact;
 	}
 
-	public boolean uuidMatch(UUID uuid) {
-		if(this.getUuid().equals(uuid)){
-		return true;	
-		}
-		return false;
-	}
 
 	public Address getAddress() {
 		return address;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("%s (%s) \n %s \n \n %30s", this.getName(), this.getUuid(),
+				this.getContact().toString(), this.getAddress().toString());
+	}
 	
 	
 }

@@ -46,6 +46,7 @@ public class Invoice implements Expenses {
 	@Override
 	public double getTaxes() {
 		Map<UUID, InvoiceItem> invoiceItem = getInvoiceItems();
+		
 			
 		
 		return 0;

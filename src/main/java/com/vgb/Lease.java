@@ -2,20 +2,13 @@ package com.vgb;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
+
 
 public class Lease extends Equipment {
 
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private static final double FLAT_TAX = 1500.00;
-	
-//	public Lease(UUID uuid, String name, String modelName, double price, LocalDate startDate, LocalDate endDate) {
-//		super(uuid, name, modelName, price);
-//		this.startDate = startDate;
-//		this.endDate = endDate;
-//		
-//	}
 	
 	public Lease(Equipment equipment, LocalDate startDate, LocalDate endDate) {
 		super(equipment.getUUID(), equipment.getName(), equipment.getModelName(), equipment.getPrice());
@@ -28,7 +21,8 @@ public class Lease extends Equipment {
 		return ChronoUnit.DAYS.between(getStartDate(), getEndDate()) + 1;
 	}
 	
-	public double calculatePrice() {	     
+	@Override
+	public double getSubTotal() {	     
 	    double years = calculateDays() / 365.0;
 	    return (years / 5) * super.getPrice() * 1.5;
 	}
@@ -36,15 +30,15 @@ public class Lease extends Equipment {
 	@Override
 	public double getTaxes() {
 		
-		if (calculatePrice() > 12500.00) {
+		if (getSubTotal() > 12500.00) {
 			return FLAT_TAX;
 		}
 		return 0;
 	}
 	
 	@Override
-	public double getPrice() {
-		return roundToCent(calculatePrice() + getTaxes());
+	public double getTotal() {
+		return roundToCent(getSubTotal() + getTaxes());
 	}
 	
 	public LocalDate getStartDate() {
@@ -56,5 +50,11 @@ public class Lease extends Equipment {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return String.format("\n %s (Lease) \n"
+				+ "%20s | %s - %s (%s) days", this.getUUID(), this.getName(),this.getStartDate() , this.getEndDate(),
+				this.calculateDays());
+	}
 	
 }

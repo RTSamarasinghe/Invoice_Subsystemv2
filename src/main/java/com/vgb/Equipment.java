@@ -33,9 +33,13 @@ public class Equipment extends Item {
 
 	@Override
 	public double getSubTotal() {
-		return 0;
+		return super.getPrice();
 	}
 
-	
+	@Override
+	public String toString() {
+		return String.format("%s (Purchase) \n %s-%s \n %70s $%s $%s $%s", this.getUUID(), 
+				this.getModelName(), this.getName()," ", this.getSubTotal(), this.getTaxes(), this.getTotal());
+	}
 	
 }

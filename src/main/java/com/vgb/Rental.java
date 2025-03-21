@@ -41,4 +41,9 @@ public class Rental extends Equipment{
 	public double getHours() {
 		return hours;
 	}
+	
+	public String toString() {
+		return String.format("%s (Rental) %s-%s \n %s hours @ %s/per hour \n %70s $%s $%s $%s", this.getUUID(), this.getName(),
+				this.getModelName(), this.getHours(), this.calculateRate(), " ", this.getSubTotal(), this.getTaxes(), this.getTotal());
+	}
 }

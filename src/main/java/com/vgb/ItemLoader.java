@@ -33,7 +33,7 @@ public class ItemLoader {
 					
 					String parts[] = line.split(",");
 					UUID uuid = UUID.fromString(parts[0]);
-					String name = parts[1];
+					String name = parts[2];
 					String field = parts[3];
 					double price = 0.0, costPerUnit = 0.0; 
 					UUID customerUUID;
@@ -46,7 +46,7 @@ public class ItemLoader {
 						item = new Equipment(uuid, name, modelName, price);
 					} else if(parts[1].equals("M")) {
 						
-						String unit = field;
+						String unit = parts[3];
 						costPerUnit = Double.parseDouble(parts[4]);
 						
 						item = new Material(uuid, name, unit, costPerUnit);

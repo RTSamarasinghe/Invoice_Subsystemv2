@@ -31,4 +31,10 @@ public class Address {
 	public String getZip() {
 		return zip;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%15s %s, \n %s %s", this.getStreet(), this.getCity(),
+				this.getState(), this.getZip());
+	}
 }
