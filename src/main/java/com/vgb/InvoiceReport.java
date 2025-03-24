@@ -49,35 +49,20 @@ public class InvoiceReport {
 	/**
 	 * Prints company summary report
 	 */
-	public static void printCompanySummary() {
-		
-		Map<Invoice, List<InvoiceItem>> invoiceItems = ReportUtils.populateInvoice();
-		
-	    Map<UUID, Company> companies = CompanyLoader.loadCompany();
+	public static String printCompanySummary() {
 	    
-	    Map<Company, Double> companyInvoiceTotals = new HashMap<>();
-	    Map<Company, Integer> companyInvoiceCounts = new HashMap<>();
-	    
-		System.out.println("==========================================\n"
+		StringBuilder report = new StringBuilder();
+		
+		report.append("==========================================\n"
 				+ "Company Summary\n"
 				+ "==========================================\n");
 		
-		System.out.println(String.format("%70s %s %s %s", " ", "#Invoices", "", "Grand Total"));
+		report.append(String.format("%70s %s %s %s\n", " ", "#Invoices", "", "Grand Total"));
 	    
-		for(Map.Entry<Invoice, List<InvoiceItem>> entry : invoiceItems.entrySet()) {
-			Invoice invoice = entry.getKey();
-			List<InvoiceItem> items = entry.getValue();
-			
-			Company company = companies.get(invoice.getCustomer().getUuid());
-			
-			if(company == null) continue;
-			
-			double invoiceTotal = invoice.grandTotal(items);
-			companyInvoiceTotals.put(company, companyInvoiceTotals.getOrDefault(company, 0.0) + invoiceTotal);
-			companyInvoiceCounts.put(company, companyInvoiceCounts.getOrDefault(company, 0) + 1);
-			
-		}
-		ReportUtils.companySummary();
+		report.append(ReportUtils.companySummary());
+		
+		return report.toString();
+		
 	}
 	
 	/**
@@ -88,10 +73,10 @@ public class InvoiceReport {
 		StringBuilder report = new StringBuilder();
 	    Map<Invoice, double[]> summary = ReportUtils.invoiceSummary();
 	    
-	    report.append("+----------------------------------------------------------------------------------------+");
-	    report.append("| Summary Report - By Total                                                              |");
-	    report.append("+----------------------------------------------------------------------------------------+");
-	    report.append(String.format("%-40s %-30s %10s %12s %12s", "Invoice #", "Customer", "Num Items", "Tax", "Total"));
+	    report.append("+----------------------------------------------------------------------------------------+ \n");
+	    report.append("| Summary Report - By Total                                                              | \n ");
+	    report.append("+----------------------------------------------------------------------------------------+ \n");
+	    report.append(String.format("%-40s %-30s %10s %12s %12s \n", "Invoice #", "Customer", "Num Items", "Tax", "Total"));
 
 	    double grandTotal = 0;
 	    double totalTax = 0;
@@ -109,7 +94,7 @@ public class InvoiceReport {
 	        totalTax += tax;
 	        totalItems += itemCount;
 
-	        report.append(String.format("%-40s %-30s %10d %12.2f %12.2f", 
+	        report.append(String.format("%-40s %-30s %10d %12.2f %12.2f \n", 
 	            invoice.getInvoiceUUID(), 
 	            invoice.getCustomer().getName(), 
 	            itemCount, 
@@ -117,7 +102,7 @@ public class InvoiceReport {
 	            total));
 	    }
 
-	    report.append("+----------------------------------------------------------------------------------------+");
+	    report.append("+----------------------------------------------------------------------------------------+ \n");
 	    report.append(String.format("%-72s %10d %12.2f %12.2f", " ", totalItems, totalTax, grandTotal));
 	    
 	    return report.toString();
@@ -127,11 +112,12 @@ public class InvoiceReport {
 	public static void main(String[] args) {
 		
 		System.out.println(InvoiceReport.printInvoice());
+		System.out.println(InvoiceReport.printInvoiceSummary());
+		System.out.println(InvoiceReport.printCompanySummary());
+				
 		
-		InvoiceReport.printCompanySummary();		
-		InvoiceReport.printInvoiceSummary();
 		
-		FileOutputWriter.writeReportsToFile("output/myoutput.txt");
+		FileOutputWriter.writeReportsToFile("output/output.txt");
 	}
 	
 	

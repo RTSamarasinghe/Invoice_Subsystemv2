@@ -40,6 +40,19 @@ public class Company {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) return true;
+		if((obj == null) || getClass() != obj.getClass()) return false;
+		Company company = (Company) obj;
+		return uuid.equals(company.uuid);
+	}
+	
+	@Override
+	public int hashCode() {
+	    return uuid.hashCode();  
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("%s (%s) \n %s \n \n %30s", this.getName(), this.getUuid(),
 				this.getContact().toString(), this.getAddress().toString());

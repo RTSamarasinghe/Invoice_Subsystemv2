@@ -64,15 +64,22 @@ public class ReportUtils {
     public static Map<Company, Integer> calculateCompanyInvoiceCount() {
         Map<Invoice, List<InvoiceItem>> invoiceItems = populateInvoice();
         Map<UUID, Company> companies = CompanyLoader.loadCompany();
-        Map<Company, Integer> count = new HashMap<>();
-
-        for (Invoice invoice : invoiceItems.keySet()) {
-            Company company = companies.get(invoice.getCustomer().getUuid());
-            if (company != null) {
-                count.put(company, count.getOrDefault(company, 0) + 1);
-            }
+        Map<Company, Integer> companyInvoiceCounts = new HashMap<>();
+        
+        for (Company company : companies.values()) {
+            companyInvoiceCounts.put(company, 0);
         }
-        return count;
+        
+        for(Map.Entry<Invoice, List<InvoiceItem>> entry : invoiceItems.entrySet()) {
+			Invoice invoice = entry.getKey();
+			
+			
+			Company company = companies.get(invoice.getCustomer().getUuid());			
+			if(company == null) continue;
+			
+			companyInvoiceCounts.put(company, companyInvoiceCounts.getOrDefault(company, 0) + 1);
+	    }
+        return companyInvoiceCounts;
     }
     
     /**
@@ -81,24 +88,28 @@ public class ReportUtils {
 	 * @param count
 	 */
 	
-	public static void companySummary() {
+	public static String companySummary() {
+		
+		StringBuilder report = new StringBuilder();
 		
 		Map<Company, Double> companyTotals = calculateCompanyTotals();
 		Map<Company, Integer> count = calculateCompanyInvoiceCount();
 		
 		for(Company company: companyTotals.keySet()) {
+			
 			double totalAmount = companyTotals.get(company);
 			int invoiceCount = count.getOrDefault(company, 0);
-			System.out.println(String.format("%s \n %70s %s %8s $%s", company.getName(), 
+			
+			report.append(String.format("%s \n %70s %s %8s $%s\n", company.getName(), 
 					" ",invoiceCount, "",  totalAmount));
 		}
 		
-		double companyTotal = companyTotals.values().stream().mapToDouble(d -> d).sum();
+		double companyTotal = Math.round(companyTotals.values().stream().mapToDouble(d -> d).sum());
+		int invoiceCountTotal = count.values().stream().mapToInt(d -> d).sum();
+		report.append(String.format("%95s"
+				+ "\n%70s %s %8s $%s\n","------------------------"," ", invoiceCountTotal, " ", companyTotal));
 		
-		System.out.println(String.format("%95s"
-				+ "\n%70s %s %8s $%s","------------------------"," ", count.size()+1, " ", companyTotal));
-		
-		
+		return report.toString();		
 			
 	}
 	
@@ -112,8 +123,6 @@ public class ReportUtils {
 		        List<InvoiceItem> items = entry.getValue();
 
 		        int itemCount = items.size();
-		        double subTotal = 0;
-		        subTotal = invoice.grandSubTotal(items);
 
 		        double tax = invoice.grandTaxTotal(items); 
 		        double total = invoice.grandTotal(items);
