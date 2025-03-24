@@ -1,12 +1,23 @@
 package com.vgb;
 
 import java.util.UUID;
-
+/**
+ * Represents a Rental Transaction available in the System
+ * Extends equipment
+ */
 public class Rental extends Equipment{
 
 	private double hours;
 	private static final double TAX = 0.0438;
 	
+	/**
+	 * Constructs a Rental object with given attributes
+	 * @param uuid Equipments UUID
+	 * @param name Equipments Name
+	 * @param modelName Equipments model name
+	 * @param price Equipments price
+	 * @param hours Number of hours rented
+	 */
 	public Rental(UUID uuid, String name, String modelName, double price, double hours) {
 		super(uuid, name, modelName, price);
 		this.hours = hours;

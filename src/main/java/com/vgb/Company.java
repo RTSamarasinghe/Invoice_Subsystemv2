@@ -1,7 +1,10 @@
 package com.vgb;
 
 import java.util.UUID;
-
+/*
+ * Represents a single company in the System
+ * 
+ */
 public class Company {
 
 	
@@ -10,7 +13,13 @@ public class Company {
 	private Person contact;
 	private Address address;
 	
-	
+	/**
+	 * Constructs a company object based on the given attributes
+	 * @param uuid
+	 * @param name
+	 * @param contact
+	 * @param address
+	 */
 	public Company(UUID uuid, String name, Person contact, Address address) {
 		super();
 		this.uuid = uuid;

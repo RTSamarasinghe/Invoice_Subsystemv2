@@ -1,7 +1,10 @@
 package com.vgb;
 
-import java.util.List;
 
+
+/**
+* Represents an item in an invoice.
+*/
 public class InvoiceItem {
 	
 	private Invoice invoice;

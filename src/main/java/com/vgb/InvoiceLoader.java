@@ -7,7 +7,9 @@ import java.util.UUID;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-
+/**
+ * Utility class for loading Invoices from a flat file
+ */
 public class InvoiceLoader {
 	
 	public static final String FILE_PATH = "data/Invoices.csv";

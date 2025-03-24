@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
-
+/**
+ * Utility class for loading Invoice Item from a flat file
+ */
 public class InvoiceItemLoader {
 	
 	public static final String FILE_PATH = "data/InvoiceItems.csv";

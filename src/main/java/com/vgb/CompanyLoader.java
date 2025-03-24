@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
+/**
+ * Utility class for loading and Constucting Company objects from a flat file
+ */
 public class CompanyLoader {
 	
 	

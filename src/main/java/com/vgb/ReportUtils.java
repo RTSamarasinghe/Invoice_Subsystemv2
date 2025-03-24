@@ -14,8 +14,6 @@ public class ReportUtils {
     public static Map<Invoice, List<InvoiceItem>> populateInvoice(){
     	
     	Map<Invoice, List<InvoiceItem>> invoicesReport = new HashMap<>();
-    	
-    	
     	 Map<UUID, Invoice> invoiceMap = InvoiceLoader.loadInvoice();
     	    Map<UUID, List<InvoiceItem>> invoiceItemMap = InvoiceItemLoader.loadInvoiceItem();
     	    
@@ -112,7 +110,10 @@ public class ReportUtils {
 		return report.toString();		
 			
 	}
-	
+	/**
+	 * Logic for calculating the totals for invoice Summary
+	 * @return sum of items, taxes and totals of invoices
+	 */
 	
 		public static Map<Invoice, double[]> invoiceSummary() {
 		    Map<Invoice, List<InvoiceItem>> invoiceItems = populateInvoice();

@@ -2,9 +2,10 @@ package com.vgb;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
+/**
+ * Represents an Invoice in the System
+ */
 public class Invoice {
 
 	private UUID invoiceUUID;
@@ -13,6 +14,13 @@ public class Invoice {
     private LocalDate invoiceDate;
     private List<InvoiceItem> invoiceItems;
     
+    /**
+     * Constructs an Invoice based on the given attributes
+     * @param invoiceUUID Invoice
+     * @param customer Company the transaction was done to
+     * @param salesperson Person who carried out the sale
+     * @param invoiceDate date of the invoice
+     */
 	public Invoice(UUID invoiceUUID, Company customer, Person salesperson, LocalDate invoiceDate) {
 		super();
 		this.invoiceUUID = invoiceUUID;
@@ -23,6 +31,11 @@ public class Invoice {
 		
 	}
 	
+	/**
+	 * Constructs a mapped Invoice with the list of items belonging to that invoice
+	 * @param invoice
+	 * @param invoiceItem
+	 */
 	public Invoice(Invoice invoice, List<InvoiceItem> invoiceItem) {
 		this.invoiceUUID = invoice.invoiceUUID;
 		this.customer = invoice.customer;
@@ -50,7 +63,9 @@ public class Invoice {
 		return invoiceItems;
 	}
 
-
+	/**
+	 * Returns the sum of Totals in an invoice
+	 */
 	public double grandTotal(List<InvoiceItem> invoiceItem){
 		
 		double total = 0.0;
@@ -62,6 +77,9 @@ public class Invoice {
 		
 	}
 	
+	/**
+	 * Returns the sum of SubTotals in an invoice
+	 */
 public double grandSubTotal(List<InvoiceItem> invoiceItem){
 		
 		double total = 0.0;
@@ -72,7 +90,9 @@ public double grandSubTotal(List<InvoiceItem> invoiceItem){
 		return total;
 		
 	}
-
+/**
+ * Returns the sum of taxes in an invoice
+ */
 public double grandTaxTotal(List<InvoiceItem> invoiceItem){
 	
 	double total = 0.0;

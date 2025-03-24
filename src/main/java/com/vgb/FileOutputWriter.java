@@ -5,11 +5,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
-
+/**
+ * Utility class for writing Converted data files and Reports to a text file
+ */
 public class FileOutputWriter {
-    
+    /**
+     * Writes converted data files
+     * 
+     * @param content Converted objects
+     * @param filePath
+     * @throws IOException Throws if an error occurs while writing
+     */
     public static void writeToFile(String content, String filePath) throws IOException {
-        // Create directories if they don't exist
+        
         File file = new File(filePath);
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
@@ -25,16 +33,16 @@ public class FileOutputWriter {
         Map<UUID, Company> companies = CompanyLoader.loadCompany();
         Map<UUID, Item> items = ItemLoader.loadItem();
         
-        // Define output directory
+       
         String outputDir = "output/";
         
         try {
-            // Convert and write JSON files
+            
             writeToFile(DataConverter.convertToJson(persons), outputDir + "persons.json");
             writeToFile(DataConverter.convertToJson(companies), outputDir + "companies.json");
             writeToFile(DataConverter.convertToJson(items), outputDir + "items.json");
             
-            // Convert and write XML files
+            
             writeToFile(DataConverter.convertToXml(persons), outputDir + "persons.xml");
             writeToFile(DataConverter.convertToXml(companies), outputDir + "companies.xml");
             writeToFile(DataConverter.convertToXml(items), outputDir + "items.xml");

@@ -3,7 +3,10 @@ package com.vgb;
 
 import java.util.List;
 import java.util.UUID;
-
+/*
+ * Represents a person in the system
+ * 
+ */
 public class Person {
 	
 	private UUID uuid;
@@ -12,6 +15,14 @@ public class Person {
 	private String phone;
 	private List<String> emails;
 	
+	/**
+	 * Constructs a person based on the given attributes
+	 * @param uuid
+	 * @param firstName
+	 * @param lastName
+	 * @param phone
+	 * @param emails
+	 */
 	public Person(UUID uuid, String firstName, String lastName, String phone, List<String> emails) {
 		super();
 		this.uuid = uuid;

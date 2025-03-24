@@ -8,7 +8,9 @@ import java.util.UUID;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
+/**
+ * Utility class for loading and constructing Items from a flat file
+ */
 public class ItemLoader {
 
 	public static final String FILE_PATH = "data/Items.csv";

@@ -2,6 +2,9 @@ package com.vgb;
 
 import java.util.UUID;
 
+/*
+ * Represents a material in the System
+ */
 public class Material extends Item{
 
 	
@@ -10,10 +13,22 @@ public class Material extends Item{
 	private double quantity;
 	private final static double TAX_RATE = 0.0715;
 	
+	/**
+	 * Constructs a Material object based on the given attributes
+	 * @param uuid items uuid
+	 * @param name material name
+	 * @param unit 
+	 * @param costPerUnit 
+	 */
 	public Material(UUID uuid, String name, String unit, double costPerUnit) {
 		super(uuid, name, costPerUnit);
 		this.unit = unit;
 	}
+	/**
+	 * Copy constructor for parsing in the quantity during a transaction
+	 * @param material
+	 * @param quantity
+	 */
 	
 	public Material(Material material,  double quantity) {
 		super(material.getUUID(), material.getName(), material.getPrice());

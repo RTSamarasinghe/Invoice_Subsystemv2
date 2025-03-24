@@ -9,11 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
-
+/*
+ * Utility Class for reading a person from a flat data file (.csv)
+ * 
+ */
 public class PersonLoader {
 
 		public static final String FILE_PATH = "data/Persons.csv";
 		
+		/**
+		 * Creates a Person object with a UUID reading a flat file
+		 * @return Person
+		 */
 		public static Map<UUID,Person> loadPerson(){
 			
 			Map<UUID, Person> persons = new HashMap<UUID,Person>();

@@ -6,7 +6,12 @@ import com.thoughtworks.xstream.XStream;
 
 import java.util.Map;
 import java.util.UUID;
-
+/**
+ * 
+ * Converts data to JSON and XML files using gson and XML stream
+ * Outputs to output folder
+ * 
+ */
 public class DataConverter {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
