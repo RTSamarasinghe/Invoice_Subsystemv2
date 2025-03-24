@@ -1,5 +1,7 @@
 package com.vgb;
 
+import java.util.List;
+
 public class InvoiceItem {
 	
 	private Invoice invoice;
@@ -21,6 +23,11 @@ public class InvoiceItem {
 	public Item getItem() {
 		return item;
 	}
+	
+
+
+
+
 	
 	
 

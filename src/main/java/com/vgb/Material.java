@@ -47,7 +47,7 @@ public class Material extends Item{
 	
 	@Override
 	public String toString() {
-		return String.format("%s (Material) %s \n %20s @ $ %s/per %s \n %70s $%s $%s $%s ", this.getUUID(), this.getName(),
+		return String.format("\n %s (Material) %s \n %20s @ $ %s/per %s \n %70s $%s $%s $%s \n ", this.getUUID(), this.getName(),
 				this.getQuantity(), this.getPrice(), this.getUnit()," ", this.getSubTotal(), this.getTaxes(), this.getTotal());
 	}
 	

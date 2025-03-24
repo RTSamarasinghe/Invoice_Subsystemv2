@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Invoice implements Expenses {
+public class Invoice {
 
 	private UUID invoiceUUID;
     private Company customer;
     private Person salesperson;
     private LocalDate invoiceDate;
-    private Map<UUID, InvoiceItem> invoiceItems;
+    private List<InvoiceItem> invoiceItems;
     
 	public Invoice(UUID invoiceUUID, Company customer, Person salesperson, LocalDate invoiceDate) {
 		super();
@@ -21,6 +21,14 @@ public class Invoice implements Expenses {
 		this.invoiceDate = invoiceDate;
 		
 		
+	}
+	
+	public Invoice(Invoice invoice, List<InvoiceItem> invoiceItem) {
+		this.invoiceUUID = invoice.invoiceUUID;
+		this.customer = invoice.customer;
+		this.salesperson = invoice.salesperson;
+		this.invoiceDate = invoice.invoiceDate;
+		this.invoiceItems = invoiceItem;
 	}
 	
 	
@@ -38,32 +46,50 @@ public class Invoice implements Expenses {
 	}
 
 
-	public Map<UUID, InvoiceItem> getInvoiceItems() {
+	public List<InvoiceItem> getInvoiceItems() {
 		return invoiceItems;
 	}
 
 
-	@Override
-	public double getTaxes() {
-		Map<UUID, InvoiceItem> invoiceItem = getInvoiceItems();
+	public double grandTotal(List<InvoiceItem> invoiceItem){
 		
-			
+		double total = 0.0;
+		for(InvoiceItem i : invoiceItem) {
+			total += i.getItem().getTotal();
+		}
 		
-		return 0;
+		return total;
+		
+	}
+	
+public double grandSubTotal(List<InvoiceItem> invoiceItem){
+		
+		double total = 0.0;
+		for(InvoiceItem i : invoiceItem) {
+			total += i.getItem().getSubTotal();
+		}
+		
+		return total;
+		
 	}
 
-
-	@Override
-	public double getTotal() {
-		// TODO Auto-generated method stub
-		return 0;
+public double grandTaxTotal(List<InvoiceItem> invoiceItem){
+	
+	double total = 0.0;
+	for(InvoiceItem i : invoiceItem) {
+		total += i.getItem().getTaxes();
 	}
-
-
+	
+	return total;
+	
+}
+	
 	@Override
-	public double getSubTotal() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String toString() {
+		return String.format("Invoice ID: %s \n \n"
+				+ "Customer: %s \n"
+				+ "Salesperson: %s \n", this.getInvoiceUUID(), this.getCustomer().toString(),
+				this.getSalesperson().toString());
 	}
     
 	

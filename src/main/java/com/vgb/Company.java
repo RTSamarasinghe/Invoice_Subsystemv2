@@ -44,6 +44,8 @@ public class Company {
 		return String.format("%s (%s) \n %s \n \n %30s", this.getName(), this.getUuid(),
 				this.getContact().toString(), this.getAddress().toString());
 	}
+
+
 	
 	
 }
