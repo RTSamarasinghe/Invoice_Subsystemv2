@@ -34,18 +34,18 @@ public class Rental extends Equipment{
 	
 	@Override
 	public double getTaxes() {
-		return super.getPrice() * TAX;
+		return roundToCent(super.getPrice() * TAX);
 		
 	}
 	
 	@Override
 	public double getSubTotal() {
-		return getHours() * calculateRate();
+		return roundToCent(getHours() * calculateRate());
 	}
 	
 	@Override
 	public double getTotal() {
-		return getTaxes() + getSubTotal();
+		return roundToCent(getTaxes() + getSubTotal());
 	}
 
 
