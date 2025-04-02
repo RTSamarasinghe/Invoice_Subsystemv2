@@ -37,7 +37,7 @@ public class Lease extends Equipment {
 	@Override
 	public double getSubTotal() {	     
 	    double years = calculateDays() / 365.0;
-	    return (years / 5) * super.getPrice() * 1.5;
+	    return roundToCent((years / 5) * super.getPrice() * 1.5);
 	}
 	
 	@Override
