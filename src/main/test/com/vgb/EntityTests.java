@@ -117,7 +117,7 @@ public class EntityTests {
         double actualTax = rental.getTaxes();
         double actualTotal = rental.getTotal();
         String s = rental.toString();
-        System.out.println(s);
+        
       
         // Use assertEquals with the TOLERANCE to compare
         assertEquals(expectedAgreement, actualAgreement, TOLERANCE);
