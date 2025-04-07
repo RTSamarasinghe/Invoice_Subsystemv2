@@ -27,7 +27,8 @@ public class InvoiceTests {
     private UUID invoiceUUID;
     private Invoice invoice;
     private LocalDate invoiceDate;
-    
+     
+    // TODO: fix failures
     @BeforeEach
     public void setUp() {
         // Create a salesperson

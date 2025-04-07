@@ -22,6 +22,8 @@ public class EntityTests {
     /**
      * Test for Equipment entity.
      */
+    
+    // TODO: Fix failures
     @Test
     public void testEquipment() {
         // Data values
