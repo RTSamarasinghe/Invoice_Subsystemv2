@@ -120,7 +120,7 @@ public class InvoiceReport {
 				
 		
 		
-		FileOutputWriter.writeReportsToFile("output/output.txt");
+		//FileOutputWriter.writeReportsToFile("output/output.txt");
 	}
 	
 	

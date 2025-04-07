@@ -3,7 +3,7 @@
     <uuid>6a098f1d-4e31-46f5-a58f-56318236b759</uuid>
     <com.vgb.Equipment>
       <uuid>6a098f1d-4e31-46f5-a58f-56318236b759</uuid>
-      <name>E</name>
+      <name>Haul Truck</name>
       <price>92000.0</price>
       <modelName>HAULX9000</modelName>
     </com.vgb.Equipment>
@@ -12,7 +12,7 @@
     <uuid>e6da2367-e2e7-4a4a-ab8f-1bc756e49a7e</uuid>
     <com.vgb.Material>
       <uuid>e6da2367-e2e7-4a4a-ab8f-1bc756e49a7e</uuid>
-      <name>M</name>
+      <name>screws</name>
       <price>18.0</price>
       <unit>box</unit>
       <quantity>0.0</quantity>
@@ -22,7 +22,7 @@
     <uuid>f9616c78-d5ba-4b96-8340-83474f403451</uuid>
     <com.vgb.Contract>
       <uuid>f9616c78-d5ba-4b96-8340-83474f403451</uuid>
-      <name>C</name>
+      <name>solar panel install</name>
       <price>12456.0</price>
       <customer>
         <uuid>9e5798db-f03c-4e6f-8a43-9f195864f2cb</uuid>
@@ -50,7 +50,7 @@
     <uuid>b6847824-50e9-4d6b-9bbe-b11070a7b12c</uuid>
     <com.vgb.Equipment>
       <uuid>b6847824-50e9-4d6b-9bbe-b11070a7b12c</uuid>
-      <name>E</name>
+      <name>Mini Excavator</name>
       <price>8900.0</price>
       <modelName>ME4500</modelName>
     </com.vgb.Equipment>
@@ -59,7 +59,7 @@
     <uuid>464c11d3-f2b3-4603-86e2-9ea2387bfbdc</uuid>
     <com.vgb.Material>
       <uuid>464c11d3-f2b3-4603-86e2-9ea2387bfbdc</uuid>
-      <name>M</name>
+      <name>plasterboard</name>
       <price>38.0</price>
       <unit>sheet</unit>
       <quantity>0.0</quantity>
@@ -69,7 +69,7 @@
     <uuid>a79f9a9a-9d3e-4511-8985-e7054f84cb46</uuid>
     <com.vgb.Contract>
       <uuid>a79f9a9a-9d3e-4511-8985-e7054f84cb46</uuid>
-      <name>C</name>
+      <name>flooring setup</name>
       <price>4551.0</price>
       <customer>
         <uuid>a4f373f0-9dd0-46b0-a69b-55bdeae4a4a2</uuid>
@@ -97,7 +97,7 @@
     <uuid>e29276d7-2f6d-4d79-b205-1b95e5b0a0d8</uuid>
     <com.vgb.Material>
       <uuid>e29276d7-2f6d-4d79-b205-1b95e5b0a0d8</uuid>
-      <name>M</name>
+      <name>gravel</name>
       <price>1550.0</price>
       <unit>ton</unit>
       <quantity>0.0</quantity>
@@ -107,7 +107,7 @@
     <uuid>e9412412-89bb-4a57-af58-6b7c2b643994</uuid>
     <com.vgb.Equipment>
       <uuid>e9412412-89bb-4a57-af58-6b7c2b643994</uuid>
-      <name>E</name>
+      <name>Loader</name>
       <price>142000.0</price>
       <modelName>LD500X</modelName>
     </com.vgb.Equipment>
@@ -116,7 +116,7 @@
     <uuid>1672210c-f7c5-4642-87c4-0dd824693d07</uuid>
     <com.vgb.Contract>
       <uuid>1672210c-f7c5-4642-87c4-0dd824693d07</uuid>
-      <name>C</name>
+      <name>wall construction</name>
       <price>5665.0</price>
       <customer>
         <uuid>11efd8b7-3ddf-4884-bda4-91b9b8a6045d</uuid>
@@ -145,7 +145,7 @@
     <uuid>2f2384c0-c640-4603-853d-e9e7644f6e5a</uuid>
     <com.vgb.Material>
       <uuid>2f2384c0-c640-4603-853d-e9e7644f6e5a</uuid>
-      <name>M</name>
+      <name>timber</name>
       <price>10.0</price>
       <unit>lft</unit>
       <quantity>0.0</quantity>
@@ -155,7 +155,7 @@
     <uuid>56a775ee-7521-4c8a-9f0c-175dea919691</uuid>
     <com.vgb.Material>
       <uuid>56a775ee-7521-4c8a-9f0c-175dea919691</uuid>
-      <name>M</name>
+      <name>cement</name>
       <price>42.0</price>
       <unit>bag</unit>
       <quantity>0.0</quantity>
@@ -165,7 +165,7 @@
     <uuid>eaa9fc89-4004-4403-a3ac-fa15e9775231</uuid>
     <com.vgb.Contract>
       <uuid>eaa9fc89-4004-4403-a3ac-fa15e9775231</uuid>
-      <name>C</name>
+      <name>roof installation</name>
       <price>75454.0</price>
       <customer>
         <uuid>475f9b47-2cf0-498a-9dbf-040461e0f305</uuid>
@@ -193,7 +193,7 @@
     <uuid>f871f128-23c8-41e8-a755-861ae74d8d07</uuid>
     <com.vgb.Equipment>
       <uuid>f871f128-23c8-41e8-a755-861ae74d8d07</uuid>
-      <name>E</name>
+      <name>Roller</name>
       <price>4800.0</price>
       <modelName>RLT120</modelName>
     </com.vgb.Equipment>
@@ -202,7 +202,7 @@
     <uuid>146475e4-241a-4ac4-a571-51ec95794624</uuid>
     <com.vgb.Equipment>
       <uuid>146475e4-241a-4ac4-a571-51ec95794624</uuid>
-      <name>E</name>
+      <name>Excavator</name>
       <price>365000.0</price>
       <modelName>EX300Z</modelName>
     </com.vgb.Equipment>
@@ -211,7 +211,7 @@
     <uuid>b4f409ce-5991-404e-8402-c5384402aba3</uuid>
     <com.vgb.Contract>
       <uuid>b4f409ce-5991-404e-8402-c5384402aba3</uuid>
-      <name>C</name>
+      <name>wiring setup</name>
       <price>3222.0</price>
       <customer>
         <uuid>ca49d76e-fb80-4f56-998c-bfae585082f6</uuid>
