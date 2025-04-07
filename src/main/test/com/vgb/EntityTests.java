@@ -110,12 +110,14 @@ public class EntityTests {
         double expectedSubtotal = expectedAgreement * hours;
         double expectedTax = Math.round(equipment.getPrice() * 0.0438 * 100.0) / 100.0;
  
-        double expectedTotal = Math.round(expectedSubtotal + expectedTax * 10.0 ) / 100.0;
+        double expectedTotal = (Math.round((expectedSubtotal + expectedTax)* 100.0)/100.0);
 
         // Invoke methods to determine the agreement, tax, and total
         double actualAgreement = rental.calculateRate();
         double actualTax = rental.getTaxes();
         double actualTotal = rental.getTotal();
+        String s = rental.toString();
+        System.out.println(s);
       
         // Use assertEquals with the TOLERANCE to compare
         assertEquals(expectedAgreement, actualAgreement, TOLERANCE);
@@ -123,9 +125,8 @@ public class EntityTests {
         assertEquals(expectedTax, actualTax, TOLERANCE);
        
         assertEquals(expectedTotal, actualTotal, TOLERANCE);
-        String s = rental.toString();
-        System.out.println(s);
-      
+        
+        
         assertTrue(s.contains("Excavator"));
         assertTrue(s.contains("2378.13")); // Agreement
         assertTrue(s.contains("4166.47")); // Tax
@@ -198,6 +199,7 @@ public class EntityTests {
 
         String s = contract.toString();
        
+        
         assertTrue(s.contains("Construction Agreement"));
         assertTrue(s.contains("ABC Construction")); // Company name
         assertTrue(s.contains("20000.0")); // Price since no tax
