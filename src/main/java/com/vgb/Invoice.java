@@ -2,6 +2,7 @@ package com.vgb;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 /**
  * Represents an Invoice in the System
@@ -102,6 +103,32 @@ public double grandTaxTotal(List<InvoiceItem> invoiceItem){
 	
 	return total;
 	
+}
+
+public String listTotal(Map<Invoice,List<InvoiceItem>> invoicesReport) {
+	StringBuilder report = new StringBuilder();
+	
+	 for (Map.Entry<Invoice, List<InvoiceItem>> pair : invoicesReport.entrySet()) {
+	    	List<InvoiceItem> items = pair.getValue();
+	
+	report.append(String.format("\nInvoice Total %57s -------------------------"
+			+ " \n %70s $%s $%s $%s\n", " ",
+	" ",pair.getKey().grandSubTotal(items),
+	pair.getKey().grandTaxTotal(items),
+	pair.getKey().grandTotal(items)));
+	 }
+	 
+	 return report.toString();
+}
+
+public String itemList(List<InvoiceItem> invoiceItem) {
+	StringBuilder report = new StringBuilder();
+
+for(InvoiceItem it : invoiceItem) {
+	report.append( it.getItem().toString());
+}
+return report.toString();
+					
 }
 	
 	@Override

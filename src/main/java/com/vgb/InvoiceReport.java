@@ -34,10 +34,8 @@ public class InvoiceReport {
 			
 			report.append(String.format("\n %70s %s %s %s \n", " ", "SUBTOTAL", "TAX", "TOTAL"));
 			
-			for(InvoiceItem it : pair.getValue()) {
-				report.append(it.getItem().toString());
-								
-			}
+			report.append(pair.getKey().itemList(items));
+			
 			report.append(
 					String.format("\nInvoice Total %57s -------------------------"
 							+ " \n %70s $%s $%s $%s\n", " ",
