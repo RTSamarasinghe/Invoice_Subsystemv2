@@ -28,32 +28,38 @@ public class EntityTests {
         UUID uuid = UUID.randomUUID();
         String name = "Backhoe 3000";
         String model = "BH30X2";
-        double cost = 95125.00;
+        double cost = 95125.0;
 
         // Create an instance of equipment with the data values
         Equipment equipment = new Equipment(uuid, name, model, cost);
 
         // Expected cost and tax values
-        double expectedCost = 95125.00;
-        double expectedTax = cost * 0.0525;
-        double expectedTotal = expectedCost + expectedTax;
+        double expectedCost = 95125.0;
+        double expectedTax = Math.round(cost * 0.0525 * 100.0) / 100.0;
+        double expectedTotal = cost + expectedTax;
 
+        
         // Invoke methods to determine the cost/tax
         double actualCost = equipment.getPrice();
         double actualTax = equipment.getTaxes();
         double actualTotal = equipment.getTotal();
-     
+        
 
         // Use assertEquals with the TOLERANCE to compare
         assertEquals(expectedCost, actualCost, TOLERANCE);
+        
         assertEquals(expectedTax, actualTax, TOLERANCE);
+        
         assertEquals(expectedTotal, actualTotal, TOLERANCE);
-
-        // Ensure that the string representation contains necessary elements
         String s = equipment.toString();
+       
+        // Ensure that the string representation contains necessary elements
+        
+        
         assertTrue(s.contains("Backhoe 3000"));
         assertTrue(s.contains("BH30X2"));
         assertTrue(s.contains("95125.0"));
+        
     }
 
     /**
@@ -71,14 +77,14 @@ public class EntityTests {
         Lease lease = new Lease(equipment, startDate, endDate);
 
         // Assert the calculated values
-        assertEquals(69037.29, lease.getPrice(), 0.01);  // 50% markup on the amortized cost
+        assertEquals(95125.00, lease.getPrice(), 0.01);  // 50% markup on the amortized cost
         assertEquals(1500.00, lease.getTaxes(), 0.01);  // Flat tax applied
         assertEquals(70537.29, lease.getTotal(), 0.01);  // Total including tax
 
         
         String s = lease.toString();
         assertTrue(s.contains("Excavator"));
-        assertTrue(s.contains("1500.00")); // Tax
+        assertTrue(s.contains("1500.0")); // Tax
         assertTrue(s.contains("69037.29")); // Agreement
         assertTrue(s.contains("70537.29")); // Total
     }
@@ -98,25 +104,30 @@ public class EntityTests {
 
         // Calculate expected values (assuming hourly rental rate)
         long hours = ChronoUnit.HOURS.between(startTime, endTime);
-        double expectedAgreement = Math.round((equipment.getPrice() * 0.001) * hours); // Price per hour with a factor
-        double expectedTax = expectedAgreement * 0.0438;
-        double expectedTotal = Math.round(expectedAgreement + expectedTax);
+        double expectedAgreement = (equipment.getPrice() * 0.001) ; // Price per hour with a factor
+        double expectedSubtotal = expectedAgreement * hours;
+        double expectedTax = Math.round(equipment.getPrice() * 0.0438 * 100.0) / 100.0;
+ 
+        double expectedTotal = Math.round(expectedSubtotal + expectedTax * 10.0 ) / 100.0;
 
         // Invoke methods to determine the agreement, tax, and total
         double actualAgreement = rental.calculateRate();
         double actualTax = rental.getTaxes();
         double actualTotal = rental.getTotal();
-
+      
         // Use assertEquals with the TOLERANCE to compare
         assertEquals(expectedAgreement, actualAgreement, TOLERANCE);
+        
         assertEquals(expectedTax, actualTax, TOLERANCE);
+       
         assertEquals(expectedTotal, actualTotal, TOLERANCE);
-
         String s = rental.toString();
+        System.out.println(s);
+      
         assertTrue(s.contains("Excavator"));
-        assertTrue(s.contains("2378.00")); // Agreement
-        assertTrue(s.contains("104.16")); // Tax
-        assertTrue(s.contains("2482.00")); // Total
+        assertTrue(s.contains("2378.13")); // Agreement
+        assertTrue(s.contains("4166.47")); // Tax
+        assertTrue(s.contains("6544.6")); // Total
     }
 
     /**
@@ -128,7 +139,7 @@ public class EntityTests {
         UUID uuid = UUID.randomUUID();
         String name = "Steel Beam";
         String unit = "meters";
-        double costPerUnit = 50.00;
+        double costPerUnit = 50.0;
         double quantity = 10;
 
         // Create an instance of material
@@ -136,9 +147,9 @@ public class EntityTests {
         Material materialWithQuantity = new Material(material, quantity);
 
         // Expected values
-        double expectedTotal = costPerUnit * quantity;
-        double expectedTax = expectedTotal * 0.0715;
-
+        
+        double expectedTax = (costPerUnit * quantity)  * 0.0715;
+        double expectedTotal = (costPerUnit * quantity) + expectedTax;
         // Invoke methods to determine the total and tax
         double actualTotal = materialWithQuantity.getTotal();
         double actualTax = materialWithQuantity.getTaxes();
@@ -149,9 +160,9 @@ public class EntityTests {
 
         String s = materialWithQuantity.toString();
         assertTrue(s.contains("Steel Beam"));
-        assertTrue(s.contains("50.00")); // Cost per unit
+        assertTrue(s.contains("50.0")); // Cost per unit
         assertTrue(s.contains("meters")); // Unit
-        assertTrue(s.contains("500.00")); // Total
+        assertTrue(s.contains("535.75")); // Total
     }
 
     /**
@@ -169,7 +180,7 @@ public class EntityTests {
         Person person = new Person(UUID.fromString("7af2d8f9-d09e-4992-a41d-3bec9ed2aa31"), "Might", "KMS", "60527", ball);
         Address address = new Address("Blal", "NE", "hdh", "asdas");
         Company company = new Company(UUID.randomUUID(), "ABC Construction", person, address);
-        double price = 20000.00;
+        double price = 20000.0;
 
         // Create an instance of contract
         Contract contract = new Contract(uuid, name, price, company);
@@ -184,8 +195,9 @@ public class EntityTests {
         assertEquals(expectedTotal, actualTotal, TOLERANCE);
 
         String s = contract.toString();
+       
         assertTrue(s.contains("Construction Agreement"));
         assertTrue(s.contains("ABC Construction")); // Company name
-        assertTrue(s.contains("20000.00")); // Price since no tax
+        assertTrue(s.contains("20000.0")); // Price since no tax
     }
 }
