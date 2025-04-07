@@ -105,13 +105,7 @@ public class InvoiceTests {
         String invoiceString = invoiceWithItems.toString();
         
         String itemList = invoiceWithItems.itemList(invoiceItems);
-        
-       
-        
-        
-       
-        System.out.println (invoiceString); 
-        System.out.println (itemList); 
+
         // Check invoice identification information
         assertTrue(invoiceString.contains(invoiceUUID.toString()));
 
@@ -129,9 +123,9 @@ public class InvoiceTests {
         assertTrue(itemList.contains("Maintenance Agreement"));
 
         // Check for financial values
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedSubtotal)));
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedTaxTotal)));
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedGrandTotal)));
+        assertTrue(itemList.contains(String.valueOf(expectedSubtotal)));
+        assertTrue(itemList.contains(String.valueOf(expectedTaxTotal)));
+        assertTrue(itemList.contains(String.valueOf(expectedGrandTotal)));
     }
 
     /**
@@ -180,6 +174,8 @@ public class InvoiceTests {
 
         // Comprehensive string representation assertions
         String invoiceString = invoiceWithItems.toString();
+        
+        String itemList = invoiceWithItems.itemList(invoiceItems);
 
         // Check invoice identification information
         assertTrue(invoiceString.contains(invoiceUUID.toString()));
@@ -193,12 +189,12 @@ public class InvoiceTests {
         assertTrue(invoiceString.contains(salesperson.getUuid().toString()));
 
         // Check for items information
-        assertTrue(invoiceString.contains("Excavator") && invoiceString.contains("EX-500"));
-        assertTrue(invoiceString.contains("Office Space") && (invoiceString.contains("2025-01-01") || invoiceString.contains("2025-12-31")));
+        assertTrue(itemList.contains("Excavator") && itemList.contains("EX-500"));
+        assertTrue(itemList.contains("Office Space") && (itemList.contains("2025-01-01") || invoiceString.contains("2025-12-31")));
 
         // Check for financial values
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedSubtotal)));
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedTaxTotal)));
-        assertTrue(invoiceString.contains(String.format("%.2f", expectedGrandTotal)));
+        assertTrue(itemList.contains(String.valueOf(expectedSubtotal)));
+        assertTrue(itemList.contains(String.valueOf( expectedTaxTotal)));
+        assertTrue(itemList.contains(String.valueOf(expectedGrandTotal)));
     }
 }

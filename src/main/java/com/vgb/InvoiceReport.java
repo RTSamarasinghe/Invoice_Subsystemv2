@@ -21,7 +21,7 @@ public class InvoiceReport {
     
 	public static String printInvoice() {
 	    
-		StringBuilder report = new StringBuilder();
+StringBuilder report = new StringBuilder();
 		
 		Map<Invoice,List<InvoiceItem>> invoicesReport = ReportUtils.populateInvoice();
 		
@@ -35,13 +35,6 @@ public class InvoiceReport {
 			report.append(String.format("\n %70s %s %s %s \n", " ", "SUBTOTAL", "TAX", "TOTAL"));
 			
 			report.append(pair.getKey().itemList(items));
-			
-			report.append(
-					String.format("\nInvoice Total %57s -------------------------"
-							+ " \n %70s $%s $%s $%s\n", " ",
-					" ",pair.getKey().grandSubTotal(items),
-					pair.getKey().grandTaxTotal(items),
-					pair.getKey().grandTotal(items)));
 			report.append("\n+=====================================================================+ \n");
 		}
 	return report.toString();

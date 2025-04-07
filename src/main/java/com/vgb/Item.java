@@ -12,6 +12,7 @@ public abstract class Item implements Expenses{
 	private UUID uuid;
 	private String name;
 	private double price;
+	private Company customer;
 	
 	/**
 	 * Constructs an Item based on the given attributes
@@ -27,6 +28,15 @@ public abstract class Item implements Expenses{
 	}
 	
 	
+	public Item(UUID uuid, String name, double price, Company customer) {
+		super();
+		this.uuid = uuid;
+		this.name = name;
+		this.price = price;
+		this.customer = customer;
+	}
+
+
 	public UUID getUUID() {
 		return uuid;
 	}
@@ -49,6 +59,11 @@ public abstract class Item implements Expenses{
                 .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
     }
+
+
+	public Company getCustomer() {
+		return customer;
+	}
 	
 	
 

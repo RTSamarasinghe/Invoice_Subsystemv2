@@ -7,7 +7,7 @@ import java.util.UUID;
  */
 public class Contract extends Item {
 	
-	  private Company customer;
+	  
 	  private double contractprice;
 
 	  /**
@@ -18,8 +18,7 @@ public class Contract extends Item {
 	     * @param companyUuid The UUID of the company that VGB subcontracts with
 	     */
 	    public Contract(UUID uuid, String name, double contractPrice, Company customer) {
-	        super(uuid, name, contractPrice);
-	        this.customer = customer;
+	        super(uuid, name, contractPrice, customer);
 	        this.contractprice = contractPrice;
 	    }
 	    
@@ -27,15 +26,13 @@ public class Contract extends Item {
 	     * Copy ConstrUctor for passing in the contractPrice 
 	     * @param contract
 	     * @param contractPrice
+	     * @param customer 
 	     */
 
 	    public Contract(Contract contract, double contractPrice) {
-	        super(contract.getUUID(), contract.getName(), contractPrice);
+	        super(contract.getUUID(), contract.getName(), contractPrice, contract.getCustomer());
 	        this.contractprice = contractPrice;
-	    }
-
-	    public Company getCustomer() {
-	        return customer;
+	        
 	    }
 
 	    @Override
@@ -55,7 +52,7 @@ public class Contract extends Item {
 		
 		@Override
 		public String toString() {
-			return String.format("%s (Contract) %s \n %70s $%s $%s $%12s \n %s ", this.getUUID(), this.getName(), " ",
+			return String.format("%s (Contract) %s \n %70s $%s $%s $%12s\n %s \n ", this.getUUID(), this.getName(), " ",
 					this.getSubTotal(), this.getTaxes(), this.getTotal(), this.getCustomer().getName());
 		}
 	}
