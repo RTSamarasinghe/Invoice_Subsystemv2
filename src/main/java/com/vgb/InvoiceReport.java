@@ -1,9 +1,14 @@
 package com.vgb;
 
 
+import unl.soc.database.ConnectionFactory;
+import unl.soc.database.DataLoader;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /*
@@ -105,11 +110,16 @@ StringBuilder report = new StringBuilder();
 	
 	public static void main(String[] args) {
 		
-		System.out.println(InvoiceReport.printInvoice());
-		System.out.println(InvoiceReport.printInvoiceSummary());
-		System.out.println(InvoiceReport.printCompanySummary());
-				
+		//System.out.println(InvoiceReport.printInvoice());
+		//System.out.println(InvoiceReport.printInvoiceSummary());
+		//System.out.println(InvoiceReport.printCompanySummary());
 		
+		
+	List<Person> persons = DataLoader.loadPersons();
+		
+		for(Person p : persons) {
+			System.out.println(p.toString());
+	}
 		
 		//FileOutputWriter.writeReportsToFile("output/output.txt");
 	}

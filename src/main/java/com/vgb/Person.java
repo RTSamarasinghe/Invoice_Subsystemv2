@@ -54,8 +54,8 @@ public class Person {
 	
 	@Override
 	public String toString() {
-		return String.format("%s, %s (%s) \n %30s", this.getLastName(), this.getFirstName(),
-				this.getUuid(), this.getEmails());
+		return String.format("%s, %s (%s) \n %30s \n %s", this.getLastName(), this.getFirstName(),
+				this.getUuid(), this.getEmails(), this.getPhone());
 	}
 	
 	
