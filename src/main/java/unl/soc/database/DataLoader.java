@@ -17,6 +17,7 @@ import com.vgb.Invoice;
 import com.vgb.Equipment;
 import com.vgb.Material;
 import com.vgb.Contract;
+import com.vgb.DataFactory;
 import com.vgb.InvoiceItem;
 /**
  * DataLoader class for loading entity data from the database
@@ -172,40 +173,37 @@ public class DataLoader {
         List<Address> addresses = new ArrayList<>();
         Connection conn = null;
 
-        try {
-            LOGGER.info("Loading addresses from database");
-            conn = ConnectionFactory.getConnection();
-
-            String query = """
+        String query = """
                 SELECT a.street, a.city, s.stateName, z.zip
                 FROM Address a
                 JOIN State s ON a.stateId = s.stateId
                 JOIN ZipCode z ON a.zipId = z.zipId
                 """;
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = DataFactory.runQuery(query);
 
-            while (rs.next()) {
-                String street = rs.getString("street");
-                String city = rs.getString("city");
-                String state = rs.getString("stateName");
-                String zip = rs.getString("zip");
+            try {
+				while (rs.next()) {
+				    String street = rs.getString("street");
+				    String city = rs.getString("city");
+				    String state = rs.getString("stateName");
+				    String zip = rs.getString("zip");
 
-                Address address = new Address(street, city, state, zip);
-                addresses.add(address);
-            }
-
-            rs.close();
-            ps.close();
-
-            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());
-
-        } catch (SQLException e) {
-            LOGGER.error("Error loading addresses from database", e);
-            throw new RuntimeException("Failed to load addresses from database", e);
-        } finally {
-            ConnectionFactory.closeConnection(conn);
-        }
+				    Address address = new Address(street, city, state, zip);
+				    addresses.add(address);
+				}
+			} catch (SQLException e) {
+				LOGGER.info("loadAdresses ain't working");
+			}
+            
+            
+            try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());      
 
         return addresses;
     }
