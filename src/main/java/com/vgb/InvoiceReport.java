@@ -115,30 +115,32 @@ StringBuilder report = new StringBuilder();
 		// System.out.println(InvoiceReport.printCompanySummary());
 		
 		
-	List<Person> persons = DataLoader.loadPersons();
-	System.out.println("\n--- Persons ---");
-		for(Person p : persons) {
-			System.out.println(p.toString());
-	}
+//	List<Person> persons = DataLoader.loadPersons();
+//	System.out.println("\n--- Persons ---");
+//		for(Person p : persons) {
+//			System.out.println(p.toString());
+//	}
+//		
+//		List<Address> addresses = DataLoader.loadAddresses();
+//		System.out.println("\n--- Addresses ---");
+//		for(Address a : addresses) {
+//		    System.out.println(a.toString());
+//		}
+//		
+//		
+//		List<Company> companies = DataLoader.loadCompanies();
+//		System.out.println("\n--- Companies ---");
+//		for(Company c : companies) {
+//		    System.out.println(c.toString());
+//		}
+//		
+//		List<Item> items = DataLoader.loadItems();
+//		System.out.println("\n--- Items ---");
+//		for(Item i : items) {
+//		    System.out.println(i.toString());
+//		}
+		System.out.println(DataLoader.loadAddressById(1));
 		
-		List<Address> addresses = DataLoader.loadAddresses();
-		System.out.println("\n--- Addresses ---");
-		for(Address a : addresses) {
-		    System.out.println(a.toString());
-		}
-		
-		
-		List<Company> companies = DataLoader.loadCompanies();
-		System.out.println("\n--- Companies ---");
-		for(Company c : companies) {
-		    System.out.println(c.toString());
-		}
-		
-		List<Item> items = DataLoader.loadItems();
-		System.out.println("\n--- Items ---");
-		for(Item i : items) {
-		    System.out.println(i.toString());
-		}
 		//FileOutputWriter.writeReportsToFile("output/output.txt");
 		
 	}

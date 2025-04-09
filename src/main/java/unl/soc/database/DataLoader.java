@@ -1,15 +1,11 @@
 package unl.soc.database;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,14 +24,14 @@ import com.vgb.InvoiceItem;
  */
 public class DataLoader {
     
-    private static final Logger logger = LogManager.getLogger(DataLoader.class);
+    private static final Logger LOGGER = LogManager.getLogger();
     
     /**
      * Loads a single person from the database
      * @param personId
      * @return
      */
-    public static Person loadPersonByUUID(int personId) {
+    public static Person loadPersonById(int personId) {
         Person person = null;
         Connection conn = null;
         
@@ -62,10 +58,10 @@ public class DataLoader {
             	        uuid = UUID.fromString(uuidStr);
             	        
             	    } else {
-            	        logger.info("UUID string is null or empty");
+            	        LOGGER.info("UUID string is null or empty");
             	    }
             	} catch (IllegalArgumentException e) {
-            	    logger.info("Invalid UUID format: {}", e.getMessage());
+            	    LOGGER.info("Invalid UUID format: {}", e.getMessage());
             	}
             	
                 String firstName = rs.getString("firstName");
@@ -100,7 +96,7 @@ public class DataLoader {
             // If rs.next() didn't return true, album will remain null
             
         } catch (SQLException e) {
-            logger.info("SQLException: ");
+            LOGGER.info("SQLException: ");
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
@@ -109,7 +105,7 @@ public class DataLoader {
                     conn.close();
                 }
             } catch (SQLException e) {
-            	logger.info("SQLException");
+            	LOGGER.info("SQLException");
                 throw new RuntimeException(e);
             }
         }
@@ -127,7 +123,7 @@ public class DataLoader {
         Connection conn = null;
         
         try {
-            logger.info("Loading persons from database");
+            LOGGER.info("Loading persons from database");
             conn = ConnectionFactory.getConnection();
             
             String query = """
@@ -155,10 +151,10 @@ public class DataLoader {
             rs.close();
             ps.close();
             
-            logger.info("Successfully loaded {} persons from database", persons.size());
+            LOGGER.info("Successfully loaded {} persons from database", persons.size());
             
         } catch (SQLException e) {
-            logger.error("Error loading persons from database", e);
+            LOGGER.error("Error loading persons from database", e);
             throw new RuntimeException("Failed to load persons from database", e);
         } finally {
             ConnectionFactory.closeConnection(conn);
@@ -177,7 +173,7 @@ public class DataLoader {
         Connection conn = null;
 
         try {
-            logger.info("Loading addresses from database");
+            LOGGER.info("Loading addresses from database");
             conn = ConnectionFactory.getConnection();
 
             String query = """
@@ -202,16 +198,54 @@ public class DataLoader {
             rs.close();
             ps.close();
 
-            logger.info("Successfully loaded {} addresses from database", addresses.size());
+            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());
 
         } catch (SQLException e) {
-            logger.error("Error loading addresses from database", e);
+            LOGGER.error("Error loading addresses from database", e);
             throw new RuntimeException("Failed to load addresses from database", e);
         } finally {
             ConnectionFactory.closeConnection(conn);
         }
 
         return addresses;
+    }
+    
+    public static Address loadAddressById(int addressId) {
+    	Address address = null;
+    	Connection conn = null;
+    	
+    	try {
+    		LOGGER.info("Loading addres from DB");
+    		conn = ConnectionFactory.getConnection();
+    		
+    		String query = """
+    				SELECT a.addressId, a.street, a.city, s.stateName, z.zip
+    				FROM Address a
+    				JOIN State s ON a.stateId = s.stateId
+    				JOIN ZipCode z ON a.zipId = z.zipId
+    				WHERE a.addressId = ?
+    				""";
+    		PreparedStatement ps = conn.prepareStatement(query);
+    		ps.setInt(1, addressId);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		if (rs.next()) {
+    			String street = rs.getString("street");
+    			String city = rs.getString("city");
+    			String state = rs.getString("stateName");
+    			String zip = rs.getString("zip");
+    			
+    			address = new Address(street, city, state, zip);
+    		}
+    		
+    		ps.close();
+    		rs.close();
+    		
+    	}catch (SQLException e) {
+            LOGGER.error("Error loading AN ADDRESS from database", e);
+    	
+    	}
+    	return address;
     }
     
     /**
@@ -224,23 +258,20 @@ public class DataLoader {
         Connection conn = null;
 
         try {
-            logger.info("Loading companies from database");
+            LOGGER.info("Loading companies from database");
             conn = ConnectionFactory.getConnection();
 
             String query = """
                 SELECT 
-                    c.companyuuid, c.companyName, 
-                    p.uuid AS personUuid, p.firstName, p.lastName, p.phoneNumber,
-                    a.street, a.city, s.stateName, z.zip,
+                    c.companyuuid, c.companyName, c.personId,
+                    c.addressId
                     e.email_list AS emailAddresses
                 FROM Company c
-                JOIN Person p ON c.personId = p.personId
-                JOIN Address a ON c.addressId = a.addressId
                 JOIN State s ON a.stateId = s.stateId
                 JOIN ZipCode z ON a.zipId = z.zipId
                 LEFT JOIN (
                     SELECT personId, GROUP_CONCAT(address) AS email_list
-                    FROM Email
+                    FROM Email e
                     GROUP BY personId
                 ) e ON p.personId = e.personId
                 """;
@@ -252,29 +283,12 @@ public class DataLoader {
                 UUID companyUuid = UUID.fromString(rs.getString("companyuuid"));
                 String companyName = rs.getString("companyName");
                 
-                // Extract person data
-                UUID personUuid = UUID.fromString(rs.getString("personUuid"));
-                String firstName = rs.getString("firstName");
-                String lastName = rs.getString("lastName");
-                String phone = rs.getString("phoneNumber");
+                Integer personId = rs.getInt("personId");
+                Person contact = loadPersonById(personId);
                 
-                // Parse emails from comma-separated list
-                String emailsStr = rs.getString("emailAddresses");
-                List<String> emails = emailsStr != null && !emailsStr.isEmpty() ?
-                    Arrays.asList(emailsStr.split(",")) : new ArrayList<>();
-                
-                // Create Person object
-                Person contact = new Person(personUuid, firstName, lastName, phone, emails);
-                
-                // Extract address data
-                String street = rs.getString("street");
-                String city = rs.getString("city");
-                String state = rs.getString("stateName");
-                String zip = rs.getString("zip");
-                
-                // Create Address object
-                Address address = new Address(street, city, state, zip);
-                
+                Integer addressId = rs.getInt("addressId");
+                Address address = loadAddressById(addressId);
+   
                 // Create Company object
                 Company company = new Company(companyUuid, companyName, contact, address);
                 companies.add(company);
@@ -283,10 +297,10 @@ public class DataLoader {
             rs.close();
             ps.close();
 
-            logger.info("Successfully loaded {} companies from database", companies.size());
+            LOGGER.info("Successfully loaded {} companies from database", companies.size());
 
         } catch (SQLException e) {
-            logger.error("Error loading companies from database", e);
+            LOGGER.error("Error loading companies from database", e);
             throw new RuntimeException("Failed to load companies from database", e);
         } finally {
             ConnectionFactory.closeConnection(conn);
@@ -305,7 +319,7 @@ public class DataLoader {
         Connection conn = null;
 
         try {
-            logger.info("Loading items from database");
+            LOGGER.info("Loading items from database");
             conn = ConnectionFactory.getConnection();
 
             String query = """
@@ -391,17 +405,17 @@ public class DataLoader {
                         break;
                         
                     default:
-                        logger.warn("Unknown item type found: {}", itemType);
+                        LOGGER.warn("Unknown item type found: {}", itemType);
                 }
             }
 
             rs.close();
             ps.close();
 
-            logger.info("Successfully loaded {} items from database", items.size());
+            LOGGER.info("Successfully loaded {} items from database", items.size());
 
         } catch (SQLException e) {
-            logger.error("Error loading items from database", e);
+            LOGGER.error("Error loading items from database", e);
             throw new RuntimeException("Failed to load items from database", e);
         } finally {
             ConnectionFactory.closeConnection(conn);
