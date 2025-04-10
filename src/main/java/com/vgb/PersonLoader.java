@@ -31,7 +31,7 @@ public class PersonLoader {
 			try(Scanner s = new Scanner(new File(FILE_PATH))){
 				
 				s.nextLine();
-				s.nextLine();
+				
 				
 				while (s.hasNext()) {
 					

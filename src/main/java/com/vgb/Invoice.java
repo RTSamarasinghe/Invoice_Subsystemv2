@@ -68,7 +68,9 @@ public class Invoice {
 		
 		double total = 0.0;
 		for(InvoiceItem i : invoiceItem) {
+			if(i != null) {
 			total += i.getItem().getTotal();
+			}
 		}
 		
 		return total;
@@ -82,7 +84,9 @@ public double grandSubTotal(List<InvoiceItem> invoiceItem){
 		
 		double total = 0.0;
 		for(InvoiceItem i : invoiceItem) {
+			if (i != null) {
 			total += i.getItem().getSubTotal();
+			}
 		}
 		
 		return total;
@@ -95,7 +99,9 @@ public double grandTaxTotal(List<InvoiceItem> invoiceItem){
 	
 	double total = 0.0;
 	for(InvoiceItem i : invoiceItem) {
+		if(i != null) {
 		total += i.getItem().getTaxes();
+		}
 	}
 	
 	return total;
@@ -106,7 +112,10 @@ public String itemList(List<InvoiceItem> invoiceItem) {
 	StringBuilder report = new StringBuilder();
 
 for(InvoiceItem it : invoiceItem) {
-	report.append( it.getItem().toString());
+	if(it != null) {
+		report.append( it.getItem().toString());
+	}
+
 }
 
 report.append(String.format("\nInvoice Total %57s -------------------------"

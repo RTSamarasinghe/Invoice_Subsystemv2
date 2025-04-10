@@ -2,7 +2,7 @@ package com.vgb;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
+
 
 /**
  * Represents a Lease Transaction of an Equipment

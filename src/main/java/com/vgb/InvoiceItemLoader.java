@@ -25,11 +25,11 @@ public static Map<UUID, List<InvoiceItem>> loadInvoiceItem(){
 		String line = null;
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
 			s.nextLine();
-		
+			
 			while (s.hasNext()) {
 				
-				
 				line = s.nextLine();
+				
 				
 				if(!line.trim().isEmpty()) {
 					InvoiceItem invItem = null;
@@ -52,6 +52,7 @@ public static Map<UUID, List<InvoiceItem>> loadInvoiceItem(){
 							quantity = 0.0;
 					
 					itemUuid = UUID.fromString(itemuuidstr);
+					
 					invoiceuuid = UUID.fromString(invoiceidstr);
 					
 					if(parts.length == 5) {
@@ -60,8 +61,8 @@ public static Map<UUID, List<InvoiceItem>> loadInvoiceItem(){
 						
 						if(fields == 'L') {
 							item = items.get(itemUuid);
+
 							invoice = invoices.get(invoiceuuid);
-							
 							Equipment e = (Equipment) item;
 							Lease l = new Lease(e, startDate, endDate);
 							

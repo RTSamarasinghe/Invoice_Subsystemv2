@@ -25,7 +25,7 @@ public class InvoiceLoader {
 		String line = null;
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
 			s.nextLine();
-			s.nextLine();
+			
 			while (s.hasNext()) {
 				
 				line = s.nextLine();

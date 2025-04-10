@@ -28,7 +28,7 @@ public class ItemLoader {
 			s.nextLine();
 			Item item = null;
 			Company customer = null;
-			s.nextLine();
+			
 			while (s.hasNext()) {
 				String line = s.nextLine();
 				if(!line.trim().isEmpty()) {
