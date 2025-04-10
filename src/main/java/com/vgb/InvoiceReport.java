@@ -1,13 +1,14 @@
 package com.vgb;
 
 
-import unl.soc.database.ConnectionFactory;
-import unl.soc.database.DataLoader;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Logger;
+
+import com.vgb.database.ConnectionFactory;
+import com.vgb.database.DataLoader;
+
 import org.apache.logging.log4j.LogManager;
 
 

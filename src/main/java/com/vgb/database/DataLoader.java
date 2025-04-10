@@ -1,4 +1,4 @@
-package unl.soc.database;
+package com.vgb.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +17,6 @@ import com.vgb.Invoice;
 import com.vgb.Equipment;
 import com.vgb.Material;
 import com.vgb.Contract;
-import com.vgb.DataFactory;
 import com.vgb.InvoiceItem;
 /**
  * DataLoader class for loading entity data from the database
@@ -124,15 +123,13 @@ public class DataLoader {
         Connection conn = null;
         
         try {
-            LOGGER.info("Loading persons from database");
-            conn = ConnectionFactory.getConnection();
+           
             
             String query = """
             		SELECT uuid, firstName, lastName, phoneNumber, address FROM Person
             		JOIN Email on Email.personId = Person.personId;
             		""";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = DataFactory.runQuery(query);
             
             while (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString("uuid"));
@@ -150,17 +147,13 @@ public class DataLoader {
             }
             
             rs.close();
-            ps.close();
-            
+           
             LOGGER.info("Successfully loaded {} persons from database", persons.size());
             
         } catch (SQLException e) {
             LOGGER.error("Error loading persons from database", e);
             throw new RuntimeException("Failed to load persons from database", e);
-        } finally {
-            ConnectionFactory.closeConnection(conn);
         }
-        
         return persons;
     }
     
@@ -261,11 +254,10 @@ public class DataLoader {
      */
     public static List<Company> loadCompanies() {
         List<Company> companies = new ArrayList<>();
-        Connection conn = null;
+        
 
         try {
-            LOGGER.info("Loading companies from database");
-            conn = ConnectionFactory.getConnection();
+            
 
             String query = """
                 SELECT 
@@ -276,8 +268,8 @@ public class DataLoader {
                
               
                 """;
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+            
+            ResultSet rs = DataFactory.runQuery(query);
 
             while (rs.next()) {
                 // Extract company data
@@ -296,15 +288,12 @@ public class DataLoader {
             }
 
             rs.close();
-            ps.close();
 
             LOGGER.info("Successfully loaded {} companies from database", companies.size());
 
         } catch (SQLException e) {
             LOGGER.error("Error loading companies from database", e);
             throw new RuntimeException("Failed to load companies from database", e);
-        } finally {
-            ConnectionFactory.closeConnection(conn);
         }
 
         return companies;
@@ -317,11 +306,9 @@ public class DataLoader {
      */
     public static List<Item> loadItems() {
         List<Item> items = new ArrayList<>();
-        Connection conn = null;
 
         try {
-            LOGGER.info("Loading items from database");
-            conn = ConnectionFactory.getConnection();
+            
 
             String query = """
                 SELECT 
@@ -343,8 +330,7 @@ public class DataLoader {
                     GROUP BY personId
                 ) e ON p.personId = e.personId
                 """;
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = DataFactory.runQuery(query);
 
             while (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString("uuid"));
@@ -411,16 +397,14 @@ public class DataLoader {
             }
 
             rs.close();
-            ps.close();
+            
 
             LOGGER.info("Successfully loaded {} items from database", items.size());
 
         } catch (SQLException e) {
             LOGGER.error("Error loading items from database", e);
             throw new RuntimeException("Failed to load items from database", e);
-        } finally {
-            ConnectionFactory.closeConnection(conn);
-        }
+        } 
 
         return items;
     }

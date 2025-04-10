@@ -1,7 +1,10 @@
-package unl.soc.database;
+package com.vgb.database;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+
+import com.vgb.database.ConnectionFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;

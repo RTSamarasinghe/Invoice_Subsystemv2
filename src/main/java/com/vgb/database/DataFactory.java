@@ -1,4 +1,4 @@
-package com.vgb;
+package com.vgb.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,11 +8,10 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import unl.soc.database.ConnectionFactory;
-
-public abstract class DataFactory {
+public abstract class DataFactory  {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
+	
 	
 	public static ResultSet runQuery(String query){
 		
@@ -25,6 +24,7 @@ public abstract class DataFactory {
 			PreparedStatement ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			
+			ConnectionFactory.closeConnection(conn);
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
