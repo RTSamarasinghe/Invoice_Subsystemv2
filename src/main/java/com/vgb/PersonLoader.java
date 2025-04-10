@@ -30,9 +30,10 @@ public class PersonLoader {
 			
 			try(Scanner s = new Scanner(new File(FILE_PATH))){
 				
-				int numRecords = Integer.parseInt(s.nextLine());
 				s.nextLine();
-				for (int i = 0; i < numRecords; i++) {
+				s.nextLine();
+				
+				while (s.hasNext()) {
 					
 					line = s.nextLine();
 					

@@ -24,9 +24,9 @@ public class InvoiceLoader {
 		Map<UUID, Invoice> invoices = new HashMap<>();
 		String line = null;
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
-			int numRecords = Integer.parseInt(s.nextLine());
 			s.nextLine();
-			for (int i = 0; i < numRecords; i++) {
+			s.nextLine();
+			while (s.hasNext()) {
 				
 				line = s.nextLine();
 				
@@ -58,13 +58,21 @@ public class InvoiceLoader {
 					try {
 						customerUuid = UUID.fromString(customeridstr);
 						customer = company.get(customerUuid);
+						if (customer == null) {
+						    System.err.println("❗ Missing customer for UUID: " + customerUuid);
+						}
 					}catch(IllegalArgumentException e) {
 						System.err.println("Customer uuid: " + customeridstr);
+						continue;
 					}
 					
 					try {
 						salesPersonuid = UUID.fromString(salespersonidstr);
 						salesPerson = person.get(salesPersonuid);
+						if (salesPerson == null) {
+						    System.err.println("❗ Missing salesperson for UUID: " + salesPersonuid);
+						    continue;
+						}
 					}catch(IllegalArgumentException e) {
 						System.err.println("SalesPerson uuid: " + salespersonidstr);
 					}

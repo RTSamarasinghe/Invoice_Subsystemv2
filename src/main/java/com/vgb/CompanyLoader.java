@@ -30,9 +30,9 @@ public class CompanyLoader {
 		
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
 			
-			int numRecords = Integer.parseInt(s.nextLine());
 			s.nextLine();
-			for (int i = 0; i < numRecords; i++) {
+			
+			while (s.hasNext()) {
 				
 				line = s.nextLine();
 				

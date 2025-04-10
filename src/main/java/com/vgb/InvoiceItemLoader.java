@@ -24,12 +24,12 @@ public static Map<UUID, List<InvoiceItem>> loadInvoiceItem(){
 		Map<UUID, List<InvoiceItem>> invoiceItems = new HashMap<>();
 		String line = null;
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
-			int numRecords = Integer.parseInt(s.nextLine());
 			s.nextLine();
-			for (int i = 0; i < numRecords; i++) {
+		
+			while (s.hasNext()) {
+				
 				
 				line = s.nextLine();
-				
 				
 				if(!line.trim().isEmpty()) {
 					InvoiceItem invItem = null;

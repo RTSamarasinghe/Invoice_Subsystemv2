@@ -169,41 +169,49 @@ public class DataLoader {
      *
      * @return List of Address objects
      */
+    /**
+     * Loads all addresses from the database
+     *
+     * @return List of Address objects
+     */
     public static List<Address> loadAddresses() {
         List<Address> addresses = new ArrayList<>();
         Connection conn = null;
 
-        String query = """
+        try {
+            LOGGER.info("Loading addresses from database");
+            conn = ConnectionFactory.getConnection();
+
+            String query = """
                 SELECT a.street, a.city, s.stateName, z.zip
                 FROM Address a
                 JOIN State s ON a.stateId = s.stateId
                 JOIN ZipCode z ON a.zipId = z.zipId
                 """;
-            ResultSet rs = DataFactory.runQuery(query);
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
 
-            try {
-				while (rs.next()) {
-				    String street = rs.getString("street");
-				    String city = rs.getString("city");
-				    String state = rs.getString("stateName");
-				    String zip = rs.getString("zip");
+            while (rs.next()) {
+                String street = rs.getString("street");
+                String city = rs.getString("city");
+                String state = rs.getString("stateName");
+                String zip = rs.getString("zip");
 
-				    Address address = new Address(street, city, state, zip);
-				    addresses.add(address);
-				}
-			} catch (SQLException e) {
-				LOGGER.info("loadAdresses ain't working");
-			}
-            
-            
-            try {
-				rs.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());      
+                Address address = new Address(street, city, state, zip);
+                addresses.add(address);
+            }
+
+            rs.close();
+            ps.close();
+
+            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());
+
+        } catch (SQLException e) {
+            LOGGER.error("Error loading addresses from database", e);
+            throw new RuntimeException("Failed to load addresses from database", e);
+        } finally {
+            ConnectionFactory.closeConnection(conn);
+        }
 
         return addresses;
     }
@@ -263,15 +271,10 @@ public class DataLoader {
                 SELECT 
                     c.companyuuid, c.companyName, c.personId,
                     c.addressId
-                    e.email_list AS emailAddresses
+                    
                 FROM Company c
-                JOIN State s ON a.stateId = s.stateId
-                JOIN ZipCode z ON a.zipId = z.zipId
-                LEFT JOIN (
-                    SELECT personId, GROUP_CONCAT(address) AS email_list
-                    FROM Email e
-                    GROUP BY personId
-                ) e ON p.personId = e.personId
+               
+              
                 """;
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();

@@ -38,10 +38,7 @@ public class Invoice {
 	 * @param invoiceItem
 	 */
 	public Invoice(Invoice invoice, List<InvoiceItem> invoiceItem) {
-		this.invoiceUUID = invoice.invoiceUUID;
-		this.customer = invoice.customer;
-		this.salesperson = invoice.salesperson;
-		this.invoiceDate = invoice.invoiceDate;
+		this(invoice.getInvoiceUUID(), invoice.getCustomer(), invoice.getSalesperson(), invoice.getInvoiceDate());
 		this.invoiceItems = invoiceItem;
 	}
 	

@@ -110,38 +110,37 @@ StringBuilder report = new StringBuilder();
 	
 	public static void main(String[] args) {
 		
-		// System.out.println(InvoiceReport.printInvoice());
-		// System.out.println(InvoiceReport.printInvoiceSummary());
-		// System.out.println(InvoiceReport.printCompanySummary());
+		 System.out.println(InvoiceReport.printInvoice());
+		 System.out.println(InvoiceReport.printInvoiceSummary());
+		System.out.println(InvoiceReport.printCompanySummary());
 		
 		
-//	List<Person> persons = DataLoader.loadPersons();
-//	System.out.println("\n--- Persons ---");
-//		for(Person p : persons) {
-//			System.out.println(p.toString());
-//	}
-//		
-//		List<Address> addresses = DataLoader.loadAddresses();
-//		System.out.println("\n--- Addresses ---");
-//		for(Address a : addresses) {
-//		    System.out.println(a.toString());
-//		}
-//		
-//		
-//		List<Company> companies = DataLoader.loadCompanies();
-//		System.out.println("\n--- Companies ---");
-//		for(Company c : companies) {
-//		    System.out.println(c.toString());
-//		}
-//		
-//		List<Item> items = DataLoader.loadItems();
-//		System.out.println("\n--- Items ---");
-//		for(Item i : items) {
-//		    System.out.println(i.toString());
-//		}
-		System.out.println(DataLoader.loadAddressById(1));
+	/*List<Person> persons = DataLoader.loadPersons();
+	System.out.println("\n--- Persons ---");
+	for(Person p : persons) {
+			System.out.println(p.toString());
+	}
 		
-		//FileOutputWriter.writeReportsToFile("output/output.txt");
+		List<Address> addresses = DataLoader.loadAddresses();
+		System.out.println("\n--- Addresses ---");
+		for(Address a : addresses) {
+		    System.out.println(a.toString());
+		}
+		
+		
+		List<Company> companies = DataLoader.loadCompanies();
+		System.out.println("\n--- Companies ---");
+		for(Company c : companies) {
+		    System.out.println(c.toString());
+		}
+		
+		List<Item> items = DataLoader.loadItems();
+		System.out.println("\n--- Items ---");
+		for(Item i : items) {
+		    System.out.println(i.toString());		}
+		System.out.println(DataLoader.loadAddressById(1));*/
+		
+		FileOutputWriter.writeReportsToFile("data/output.txt");
 		
 	}
 	

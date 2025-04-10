@@ -25,15 +25,20 @@ public class ItemLoader {
 		
 		try(Scanner s = new Scanner(new File(FILE_PATH))){
 			
-			int numRecords = Integer.parseInt(s.nextLine());
+			s.nextLine();
 			Item item = null;
 			Company customer = null;
-			String line = s.nextLine();
-			for (int i = 0; i < numRecords; i++) {
-				line = s.nextLine();
+			s.nextLine();
+			while (s.hasNext()) {
+				String line = s.nextLine();
 				if(!line.trim().isEmpty()) {
 					
 					String parts[] = line.split(",");
+					
+					if (parts.length < 4) {
+					    throw new IllegalArgumentException("Invalid line format: " + line);
+					}
+					
 					UUID uuid = UUID.fromString(parts[0]);
 					String name = parts[2];
 					String field = parts[3];
@@ -60,8 +65,10 @@ public class ItemLoader {
 								throw new IllegalArgumentException("Invalid UUID format: " + field);
 							}
 						customer = company.get(customerUUID);
+						
+						if (parts.length > 4) {
 						price = Double.parseDouble(parts[4]);
-											
+						}
 						item = new Contract(uuid, name, price, customer);
 						 
 						

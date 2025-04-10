@@ -2,6 +2,7 @@ package com.vgb;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 /**
  * Represents a Lease Transaction of an Equipment
@@ -25,6 +26,8 @@ public class Lease extends Equipment {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
+
+	
 
 	/*
 	 * returns the difference of startDate and endDate
