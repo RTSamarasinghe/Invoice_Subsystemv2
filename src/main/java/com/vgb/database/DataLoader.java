@@ -1,11 +1,15 @@
 package com.vgb.database;
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,24 +18,79 @@ import com.vgb.Person;
 import com.vgb.Address;
 import com.vgb.Item;
 import com.vgb.Invoice;
-import com.vgb.Equipment;
-import com.vgb.Material;
-import com.vgb.Contract;
 import com.vgb.InvoiceItem;
+
 /**
  * DataLoader class for loading entity data from the database
  * Handles Person, Address, Company, Item, Invoice and InvoiceItem entities
  */
 public class DataLoader {
     
+	
     private static final Logger LOGGER = LogManager.getLogger();
+   
     
     /**
-     * Loads a single person from the database
-     * @param personId
-     * @return
+     * 
+     * Loads data from Database 
+     * 
+     * @param <T> Generic that should be corresponding to the mapper base class </br>
+     * Example : UUID, Company
+     * @param query The SQL query that will load the required the tables from the DB
+     * @param mapper The factory class required to create the relevant POJOs
+     * @return Required Map to be used in ReportUtils
      */
-    public static Person loadPersonById(int personId) {
+    public <T> Map<UUID,T> loadData(String query, DataMapper<T> mapper) {
+    	Connection conn = null;
+    	try {
+    	    conn = ConnectionFactory.getConnection();
+    	    }catch (SQLException e) {
+    	    	LOGGER.info("Bad Connection");
+    	    }
+    	
+        Map<UUID, T> results = new HashMap<>();
+        try {
+        	ResultSet rs = DataFactory.runQuery(query);
+        	
+        	//Debug
+        	ResultSetMetaData meta = rs.getMetaData();
+        	int columnCount = meta.getColumnCount();
+        	System.out.println("Columns returned:");
+        	System.out.print(meta.getTableName(columnCount));
+        	for (int i = 1; i <= columnCount; i++) {
+        	    System.out.println(meta.getColumnName(i));
+        	}
+        	
+        	
+            while (rs.next()) {
+            	
+            	UUID uuid = UUID.fromString(rs.getString("uuid"));
+                results.put(uuid, mapper.map(rs));
+            }
+            
+            rs.close();
+        } catch (SQLException e) {
+            LOGGER.error("Error loading data", e);
+        }
+        
+    	try {
+			if(!conn.isClosed()) {
+			ConnectionFactory.closeConnection(conn);
+			}
+		} catch (SQLException e) {
+			LOGGER.error("Closing connection no no :(");
+			e.printStackTrace();
+		}
+        
+        return results;
+    }
+  
+    /**
+     * Loads a single person record from the database
+     * @param personId
+     * @return Single person object
+     */
+    protected static Person loadPersonById(int personId) {
         Person person = null;
         Connection conn = null;
         
@@ -113,103 +172,11 @@ public class DataLoader {
         return person;
     }
     
-    /**
-     * Loads all persons from the database
-     * 
-     * @return List of Person objects
-     */
-    public static List<Person> loadPersons() {
-        List<Person> persons = new ArrayList<>();
-        Connection conn = null;
-        
-        try {
-           
-            
-            String query = """
-            		SELECT uuid, firstName, lastName, phoneNumber, address FROM Person
-            		JOIN Email on Email.personId = Person.personId;
-            		""";
-            ResultSet rs = DataFactory.runQuery(query);
-            
-            while (rs.next()) {
-                UUID uuid = UUID.fromString(rs.getString("uuid"));
-                String firstName = rs.getString("firstName");
-                String lastName = rs.getString("lastName");
-                String phone = rs.getString("phoneNumber");
-                
-                // Parse emails from comma-separated string
-                String emailsStr = rs.getString("address");
-                List<String> emails = emailsStr != null && !emailsStr.isEmpty() ? 
-                        Arrays.asList(emailsStr.split(",")) : new ArrayList<>();
-                
-                Person person = new Person(uuid, firstName, lastName, phone, emails);
-                persons.add(person);
-            }
-            
-            rs.close();
-           
-            LOGGER.info("Successfully loaded {} persons from database", persons.size());
-            
-        } catch (SQLException e) {
-            LOGGER.error("Error loading persons from database", e);
-            throw new RuntimeException("Failed to load persons from database", e);
-        }
-        return persons;
-    }
+   
     
-    /**
-     * Loads all addresses from the database
-     *
-     * @return List of Address objects
-     */
-    /**
-     * Loads all addresses from the database
-     *
-     * @return List of Address objects
-     */
-    public static List<Address> loadAddresses() {
-        List<Address> addresses = new ArrayList<>();
-        Connection conn = null;
 
-        try {
-            LOGGER.info("Loading addresses from database");
-            conn = ConnectionFactory.getConnection();
-
-            String query = """
-                SELECT a.street, a.city, s.stateName, z.zip
-                FROM Address a
-                JOIN State s ON a.stateId = s.stateId
-                JOIN ZipCode z ON a.zipId = z.zipId
-                """;
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                String street = rs.getString("street");
-                String city = rs.getString("city");
-                String state = rs.getString("stateName");
-                String zip = rs.getString("zip");
-
-                Address address = new Address(street, city, state, zip);
-                addresses.add(address);
-            }
-
-            rs.close();
-            ps.close();
-
-            LOGGER.info("Successfully loaded {} addresses from database", addresses.size());
-
-        } catch (SQLException e) {
-            LOGGER.error("Error loading addresses from database", e);
-            throw new RuntimeException("Failed to load addresses from database", e);
-        } finally {
-            ConnectionFactory.closeConnection(conn);
-        }
-
-        return addresses;
-    }
     
-    public static Address loadAddressById(int addressId) {
+    protected static Address loadAddressById(int addressId) {
     	Address address = null;
     	Connection conn = null;
     	
@@ -247,165 +214,92 @@ public class DataLoader {
     	return address;
     }
     
-    /**
-     * Loads all companies from the database
-     *
-     * @return List of Company objects
-     */
-    public static List<Company> loadCompanies() {
-        List<Company> companies = new ArrayList<>();
-        
-
-        try {
-            
-
-            String query = """
-                SELECT 
-                    c.companyuuid, c.companyName, c.personId,
-                    c.addressId
-                    
-                FROM Company c
-               
+    
+    protected static Company loadCompanyById(int companyId) {
+    	Person contact = null;
+    	Address address = null;
+    	Connection conn = null;
+    	Company company = null;
+    	
+    	LoadPerson p = new LoadPerson();
+    	IDLoader<Person> servPerson = new IDLoader<>(p);
+    	
+    	
+    	try {
+    		conn = ConnectionFactory.getConnection();
+    		String query = """
+    				SELECT uuid, companyName, personId, addressId
+    				FROM Company
+    				WHERE companyId = ?
+    				""";
+    		  PreparedStatement ps = conn.prepareStatement(query);
+              ps.setInt(1, companyId);
+              ResultSet rs = ps.executeQuery();
+              if(rs.next()) {
+              UUID uuid = UUID.fromString(rs.getString("uuid"));
+              String name = rs.getString("companyName");
+              int personId = rs.getInt("personId");
               
-                """;
+              
+              contact = servPerson.loadById("""
+              		SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
+            		FROM Person p JOIN Email e on e.personId = p.personId
+            		WHERE p.personId = ?
+              		""", personId);
+              
+              
+              address = loadAddressById(rs.getInt("addressId"));
+              company = new Company(uuid, name, contact, address);
+              } else {
+                  LOGGER.error("No company found with companyId = " + companyId);
+              }
+              ps.close();
+              rs.close();
+              
+    	}catch(SQLException e) {
+    		LOGGER.info("COMPANY NOT LOADING BY ID");
+    	}
+            return company;
             
-            ResultSet rs = DataFactory.runQuery(query);
-
-            while (rs.next()) {
-                // Extract company data
-                UUID companyUuid = UUID.fromString(rs.getString("companyuuid"));
-                String companyName = rs.getString("companyName");
-                
-                Integer personId = rs.getInt("personId");
-                Person contact = loadPersonById(personId);
-                
-                Integer addressId = rs.getInt("addressId");
-                Address address = loadAddressById(addressId);
-   
-                // Create Company object
-                Company company = new Company(companyUuid, companyName, contact, address);
-                companies.add(company);
-            }
-
-            rs.close();
-
-            LOGGER.info("Successfully loaded {} companies from database", companies.size());
-
-        } catch (SQLException e) {
-            LOGGER.error("Error loading companies from database", e);
-            throw new RuntimeException("Failed to load companies from database", e);
-        }
-
-        return companies;
     }
     
-    /**
-     * Loads all items from the database
-     *
-     * @return List of Item objects (Equipment, Material, or Contract instances)
-     */
-    public static List<Item> loadItems() {
-        List<Item> items = new ArrayList<>();
+    public Item loadItemById(int itemId) {
+    	Item item = null;
+    	Connection conn = null;
+    	
+    	char itemType;
+    	try {
+    		conn = ConnectionFactory.getConnection();
+    		
+    		String query = """
+    				SELECT uuid, itemName, itemPrice,
+    				itemType, model
+    				FROM Item
+    				WHERE itemId = ?;
+    				""";
+    		
+    		PreparedStatement ps = conn.prepareStatement(query);
+    		ps.setInt(1, itemId);
+    		ResultSet rs = ps.executeQuery();
 
-        try {
-            
-
-            String query = """
-                SELECT 
-                    i.uuid, i.itemName, i.itemPrice, i.itemType, 
-                    i.model, i.unit,
-                    c.companyuuid, c.companyName,
-                    p.uuid AS personUuid, p.firstName, p.lastName, p.phoneNumber,
-                    a.street, a.city, s.stateName, z.zip,
-                    e.email_list
-                FROM Item i
-                LEFT JOIN Company c ON i.companyId = c.companyId
-                LEFT JOIN Person p ON c.personId = p.personId
-                LEFT JOIN Address a ON c.addressId = a.addressId
-                LEFT JOIN State s ON a.stateId = s.stateId
-                LEFT JOIN ZipCode z ON a.zipId = z.zipId
-                LEFT JOIN (
-                    SELECT personId, GROUP_CONCAT(address) AS email_list
-                    FROM Email
-                    GROUP BY personId
-                ) e ON p.personId = e.personId
-                """;
-            ResultSet rs = DataFactory.runQuery(query);
-
-            while (rs.next()) {
-                UUID uuid = UUID.fromString(rs.getString("uuid"));
-                String name = rs.getString("itemName");
-                double price = rs.getDouble("itemPrice");
-                String itemType = rs.getString("itemType");
-                
-                // Create  item subclass based on itemType
-                switch (itemType) {
-                    case "E":
-                        // Create Equipment object
-                        String modelName = rs.getString("model");
-                        Equipment equipment = new Equipment(uuid, name, modelName, price);
-                        items.add(equipment);
-                        break;
-                        
-                    case "M":
-                        // Create Material object
-                        String unit = rs.getString("unit");
-                        Material material = new Material(uuid, name, unit, price);
-                        items.add(material);
-                        break;
-                        
-                    case "C":
-                        // Create Contract object
-                        // Build the associated company
-                        if (rs.getString("companyuuid") != null) {
-                            UUID companyUuid = UUID.fromString(rs.getString("companyuuid"));
-                            String companyName = rs.getString("companyName");
-                            
-                            // Build contact person
-                            UUID personUuid = UUID.fromString(rs.getString("personUuid"));
-                            String firstName = rs.getString("firstName");
-                            String lastName = rs.getString("lastName");
-                            String phone = rs.getString("phoneNumber");
-                            
-                            // Parse emails 
-                            String emailsStr = rs.getString("email_list");
-                            List<String> emails = emailsStr != null && !emailsStr.isEmpty() ?
-                                Arrays.asList(emailsStr.split(",")) : new ArrayList<>();
-                            
-                            Person contact = new Person(personUuid, firstName, lastName, phone, emails);
-                            
-                            // Build address
-                            String street = rs.getString("street");
-                            String city = rs.getString("city");
-                            String state = rs.getString("stateName");
-                            String zip = rs.getString("zip");
-                            
-                            Address address = new Address(street, city, state, zip);
-                            
-                            // Create the company
-                            Company company = new Company(companyUuid, companyName, contact, address);
-                            
-                            // Create the contract
-                            Contract contract = new Contract(uuid, name, price, company);
-                            items.add(contract);
-                        }
-                        break;
-                        
-                    default:
-                        LOGGER.warn("Unknown item type found: {}", itemType);
-                }
-            }
-
-            rs.close();
-            
-
-            LOGGER.info("Successfully loaded {} items from database", items.size());
-
-        } catch (SQLException e) {
-            LOGGER.error("Error loading items from database", e);
-            throw new RuntimeException("Failed to load items from database", e);
-        } 
-
-        return items;
+    		
+    	}catch(SQLException e) {
+    		LOGGER.info("ITEM BY ID LOADER FAIL");
+    	}
+    	
+    	return item;
     }
+    
+    public Invoice loadInvoiceById(int invoiceId) {
+    	Invoice inv = null;
+    	
+    	return inv;
+    }
+    
+    public InvoiceItem loadInvoiceItemById(int invoiceItemId) {
+    	InvoiceItem it = null;
+    	
+    	return it;
+    }
+    
 }

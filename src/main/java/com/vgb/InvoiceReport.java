@@ -1,17 +1,25 @@
 package com.vgb;
 
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import org.apache.logging.log4j.Logger;
 
 import com.vgb.database.ConnectionFactory;
+import com.vgb.database.DataFactory;
 import com.vgb.database.DataLoader;
+import com.vgb.database.IDLoader;
 
 import org.apache.logging.log4j.LogManager;
-
-
+import com.vgb.database.LoadPerson;
+import com.vgb.database.LoadCompany;
+import com.vgb.database.LoadItem;
+import com.vgb.database.LoadInvoice;
 /*
  * Contains Printing functions for the three reports
  * 
@@ -111,16 +119,58 @@ StringBuilder report = new StringBuilder();
 	
 	public static void main(String[] args) {
 		
-		 System.out.println(InvoiceReport.printInvoice());
-		 System.out.println(InvoiceReport.printInvoiceSummary());
-		System.out.println(InvoiceReport.printCompanySummary());
+//		 System.out.println(InvoiceReport.printInvoice());
+//		 System.out.println(InvoiceReport.printInvoiceSummary());
+//		System.out.println(InvoiceReport.printCompanySummary());
+		
+		DataLoader dl = new DataLoader();
+		
+//		Map<UUID, Person> persons = dl.loadData("""
+//				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
+//            		FROM Person p JOIN Email e on e.personId = p.personId
+//				""", new LoadPerson());
+//		
+//		System.out.println(persons);
 		
 		
+//		Map<UUID, Company> companies = dl.loadData("""
+//				SELECT uuid, companyName, personId, addressId
+//				FROM Company
+//				""", new LoadCompany());
+//		System.out.println(companies);
+//		
+//		Map<UUID, Item> items = dl.loadData("""
+//				SELECT * FROM Item
+//				""", new LoadItem());
+//		
+//		System.out.println(items);
+//		
+		LoadPerson p = new LoadPerson();
+		IDLoader<Person> s = new IDLoader<>(p);
+	
+		
+		
+		
+		Person person = s.loadById("""
+				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
+            		FROM Person p JOIN Email e on e.personId = p.personId
+            		WHERE p.personId = ?
+				""", 1);
+		
+		System.out.println(person.toString());
+		
+//		Map<UUID, Invoice> invoices = dl.loadData("""
+//				SELECT * FROM Invoice
+//				""", new LoadInvoice());
+//		
+//		System.out.println(invoices);
 	/*List<Person> persons = DataLoader.loadPersons();
 	System.out.println("\n--- Persons ---");
 	for(Person p : persons) {
 			System.out.println(p.toString());
 	}
+		
+		
 		
 		List<Address> addresses = DataLoader.loadAddresses();
 		System.out.println("\n--- Addresses ---");
@@ -141,7 +191,7 @@ StringBuilder report = new StringBuilder();
 		    System.out.println(i.toString());		}
 		System.out.println(DataLoader.loadAddressById(1));*/
 		
-		FileOutputWriter.writeReportsToFile("data/output.txt");
+		//FileOutputWriter.writeReportsToFile("data/output.txt");
 		
 	}
 	

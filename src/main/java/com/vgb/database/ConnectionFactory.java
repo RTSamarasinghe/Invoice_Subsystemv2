@@ -14,9 +14,9 @@ import org.apache.logging.log4j.LogManager;
 public abstract class ConnectionFactory {
 	
 	private static final Logger logger = LogManager.getLogger(ConnectionFactory.class);
-	public static final String URL = "jdbc:mysql://nuros.unl.edu/yaung3";
-    public static final String USERNAME = "yaung3"; 
-    public static final String PASSWORD = "Iesangu8Sha0"; 
+	public static final String URL = "jdbc:mysql://nuros.unl.edu/rsamarasinghe2";
+    public static final String USERNAME = "rsamarasinghe2"; 
+    public static final String PASSWORD = "mohmao4Coaha"; 
 
 	
 	public static Connection getConnection() throws SQLException {

@@ -13,7 +13,7 @@ public abstract class DataFactory  {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	
-	public static ResultSet runQuery(String query){
+	protected static ResultSet runQuery(String query){
 		
 		Connection conn = null;
 		ResultSet rs = null;
@@ -24,14 +24,12 @@ public abstract class DataFactory  {
 			PreparedStatement ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			
-			ConnectionFactory.closeConnection(conn);
-			rs.close();
-			ps.close();
 		}catch (SQLException e) {
-            LOGGER.error("Error loading persons from database", e);
-            throw new RuntimeException("Failed to load persons from database", e);
+            LOGGER.error("Error loading table from database", e);
+            throw new RuntimeException("Failed to load table from database", e);
         }
 		
+	
 		return rs;
 		
 	}
