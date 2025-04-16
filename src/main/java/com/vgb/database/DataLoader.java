@@ -147,6 +147,8 @@ public class DataLoader {
                 // Create the album object with all basic information
                 person = new Person(uuid, firstName, lastName, phoneNumber, emails);
                 
+                ConnectionFactory.closeConnection(conn);
+                
                 rs.close();
                 ps.close();
                 
@@ -203,7 +205,7 @@ public class DataLoader {
     			
     			address = new Address(street, city, state, zip);
     		}
-    		
+    		ConnectionFactory.closeConnection(conn);
     		ps.close();
     		rs.close();
     		
@@ -253,6 +255,9 @@ public class DataLoader {
               } else {
                   LOGGER.error("No company found with companyId = " + companyId);
               }
+              
+              ConnectionFactory.closeConnection(conn);
+              
               ps.close();
               rs.close();
               
