@@ -37,6 +37,7 @@ public class IDLoader <T> {
             if(rs.next()) {
     			entity = mapper.map(rs);
     		}
+            ConnectionFactory.closeConnection(conn);
     		
     	}catch(SQLException e) {
     		LOGGER.info("Something bad happening loading generic by ID :(", e);

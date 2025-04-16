@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.vgb.database.DataLoader;
+import com.vgb.database.LoadCompany;
+
 public class ReportUtils {
 	
 	/**
@@ -61,7 +64,10 @@ public class ReportUtils {
      */
     public static Map<Company, Integer> calculateCompanyInvoiceCount() {
         Map<Invoice, List<InvoiceItem>> invoiceItems = populateInvoice();
-        Map<UUID, Company> companies = CompanyLoader.loadCompany();
+        DataLoader dl = new DataLoader();
+        Map<UUID, Company> companies = dl.loadData("""
+        		SELECT * FROM Company
+        		""", new LoadCompany());
         Map<Company, Integer> companyInvoiceCounts = new HashMap<>();
         
         for (Company company : companies.values()) {

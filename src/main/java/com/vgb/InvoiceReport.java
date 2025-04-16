@@ -20,6 +20,7 @@ import com.vgb.database.LoadPerson;
 import com.vgb.database.LoadCompany;
 import com.vgb.database.LoadItem;
 import com.vgb.database.LoadInvoice;
+import com.vgb.database.LoadInvoiceItem;
 /*
  * Contains Printing functions for the three reports
  * 
@@ -145,25 +146,34 @@ StringBuilder report = new StringBuilder();
 //		
 //		System.out.println(items);
 //		
-		LoadPerson p = new LoadPerson();
-		IDLoader<Person> s = new IDLoader<>(p);
-	
-		
-		
-		
-		Person person = s.loadById("""
-				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
-            		FROM Person p JOIN Email e on e.personId = p.personId
-            		WHERE p.personId = ?
-				""", 1);
-		
-		System.out.println(person.toString());
-		
+//		LoadPerson p = new LoadPerson();
+//		IDLoader<Person> s = new IDLoader<>(p);
+//	
+//		
+//		
+//		
+//		Person person = s.loadById("""
+//				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
+//            		FROM Person p JOIN Email e on e.personId = p.personId
+//            		WHERE p.personId = ?
+//				""", 1);
+//		
+//		System.out.println(person.toString());
+//		
 //		Map<UUID, Invoice> invoices = dl.loadData("""
 //				SELECT * FROM Invoice
 //				""", new LoadInvoice());
 //		
 //		System.out.println(invoices);
+		String query = "SELECT * FROM InvoiceItem";
+		try {
+			Map<UUID, List<InvoiceItem>> invoiceItems = dl.groupData(query, new LoadInvoiceItem());
+			System.out.println(invoiceItems);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
 	/*List<Person> persons = DataLoader.loadPersons();
 	System.out.println("\n--- Persons ---");
 	for(Person p : persons) {

@@ -84,6 +84,44 @@ public class DataLoader {
         
         return results;
     }
+    
+    /**
+     * Helper method for loading InvoiceItems
+     * @param <T> 
+     * @param rs 
+     * @param mapper
+     * @return
+     * @throws SQLException
+     */
+    public <T> Map<UUID, List<T>> groupData(String query, DataMapper<T> mapper) throws SQLException {
+    	 Connection conn = null;
+    	    Map<UUID, List<T>> results = new HashMap<>();
+
+    	    try {
+    	        conn = ConnectionFactory.getConnection();
+    	        ResultSet rs = DataFactory.runQuery(query);
+
+    	        while (rs.next()) {
+    	            UUID uuid = UUID.fromString(rs.getString("uuid"));
+    	            T item = mapper.map(rs);
+
+    	            results.computeIfAbsent(uuid, k -> new ArrayList<>()).add(item);
+    	        }
+
+    	        rs.close();
+    	    } catch (SQLException e) {
+    	        LOGGER.error("Error grouping data", e);
+    	    } finally {
+    	        try {
+    	            if (conn != null && !conn.isClosed()) {
+    	                ConnectionFactory.closeConnection(conn);
+    	            }
+    	        } catch (SQLException e) {
+    	            LOGGER.error("Closing connection failed", e);
+    	        }
+    	    }
+        return results;
+    }
   
     /**
      * Loads a single person record from the database
