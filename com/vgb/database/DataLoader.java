@@ -1,20 +1,28 @@
 package com.vgb.database;
-
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.vgb.Company;
 import com.vgb.Person;
 import com.vgb.Address;
+import com.vgb.Item;
+import com.vgb.LoadAddress;
+import com.vgb.LoadPerson;
 import com.vgb.Invoice;
+import com.vgb.InvoiceItem;
 
 /**
  * DataLoader class for loading entity data from the database
@@ -48,6 +56,16 @@ public class DataLoader {
         try {
         	ResultSet rs = DataFactory.runQuery(query);
         	
+        	//Debug
+        	ResultSetMetaData meta = rs.getMetaData();
+        	int columnCount = meta.getColumnCount();
+        	System.out.println("Columns returned:");
+        	System.out.print(meta.getTableName(columnCount));
+        	for (int i = 1; i <= columnCount; i++) {
+        	    System.out.println(meta.getColumnName(i));
+        	}
+        	
+        	
             while (rs.next()) {
             	
             	UUID uuid = UUID.fromString(rs.getString("uuid"));
@@ -76,7 +94,7 @@ public class DataLoader {
      * @param <T> 
      * @param rs 
      * @param mapper
-     * @return Grouped set of Invoice Items under an Invoice
+     * @return
      * @throws SQLException
      */
     public <T> Map<Invoice, List<T>> groupData(String query, DataMapper<T> mapper, Connection conn) throws SQLException {
@@ -168,7 +186,7 @@ public class DataLoader {
                 	emails.add(email);
                 }
                 
-        
+                // Create the album object with all basic information
                 person = new Person(uuid, firstName, lastName, phoneNumber, emails);
                 
                 ConnectionFactory.closeConnection(conn);
@@ -199,12 +217,7 @@ public class DataLoader {
     }
     
    
-/**
- * Loads an address record from the database    
- * @param addressId
- * @param conn
- * @return
- */
+    
 
     
     protected static Address loadAddressById(int addressId, Connection conn) {
@@ -243,6 +256,34 @@ public class DataLoader {
     	return address;
     }
     
+    
+
+    
+    public Item loadItemById(int itemId) {
+    	Item item = null;
+    	Connection conn = null;
+    	
+    	try {
+    		conn = ConnectionFactory.getConnection();
+    		
+    		String query = """
+    				SELECT uuid, itemName, itemPrice,
+    				itemType, model
+    				FROM Item
+    				WHERE itemId = ?;
+    				""";
+    		
+    		PreparedStatement ps = conn.prepareStatement(query);
+    		ps.setInt(1, itemId);
+    		ResultSet rs = ps.executeQuery();
+
+    		
+    	}catch(SQLException e) {
+    		LOGGER.info("ITEM BY ID LOADER FAIL");
+    	}
+    	
+    	return item;
+    }
     
 
     

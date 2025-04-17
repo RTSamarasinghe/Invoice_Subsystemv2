@@ -1,21 +1,8 @@
 package com.vgb;
 
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import org.apache.logging.log4j.Logger;
-
-import com.vgb.database.ConnectionFactory;
-import com.vgb.database.DataFactory;
-import com.vgb.database.DataLoader;
-import com.vgb.database.IDLoader;
-
-import org.apache.logging.log4j.LogManager;
 /*
  * Contains Printing functions for the three reports
  * 
@@ -118,122 +105,9 @@ StringBuilder report = new StringBuilder();
 		System.out.println(InvoiceReport.printInvoice());
 		System.out.println(InvoiceReport.printInvoiceSummary());
 		System.out.println(InvoiceReport.printCompanySummary());
-		
-		DataLoader dl = new DataLoader();
-		
-//		Map<UUID, Person> persons = dl.loadData("""
-//				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
-//            		FROM Person p JOIN Email e on e.personId = p.personId
-//				""", new LoadPerson());
-//		
-//		System.out.println(persons);
-		
-		
-//		Map<UUID, Company> companies = dl.loadData("""
-//				SELECT uuid, companyName, personId, addressId
-//				FROM Company
-//				""", new LoadCompany());
-//		System.out.println(companies);
-//		
-//		Map<UUID, Item> items = dl.loadData("""
-//				SELECT * FROM Item
-//				""", new LoadItem());
-//		
-//		System.out.println(items);
-//		
-//		LoadPerson p = new LoadPerson();
-//		IDLoader<Person> s = new IDLoader<>(p);
-//	
-//		
-//		
-//		
-//		Person person = s.loadById("""
-//				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
-//            		FROM Person p JOIN Email e on e.personId = p.personId
-//            		WHERE p.personId = ?
-//				""", 1);
-//		
-//		System.out.println(person.toString());
-//		
-//		Map<UUID, Invoice> invoices = dl.loadData("""
-//				SELECT * FROM Invoice
-//				""", new LoadInvoice());
-//		
-//		System.out.println(invoices);
-//		String query = "SELECT * FROM InvoiceItem";
-//		try {
-//			Map<UUID, List<InvoiceItem>> invoiceItems = dl.groupData(query, new LoadInvoiceItem());
-//			System.out.println(invoiceItems);
-//		} catch (SQLException e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-		
-		DataLoader n = new DataLoader();
-////		try {
-////			
-////			IDLoader<Invoice> idff = new IDLoader<>(new LoadInvoice()); 
-////			Invoice c = idff.loadById("""
-////					SELECT * FROM Invoice WHERE invoiceId = ?
-////					""",4, ConnectionFactory.getConnection());
-////			System.out.println(c.toString());
-////		} catch (SQLException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-//		
-//		try {
-//			
-//			Connection conn = ConnectionFactory.getConnection();
-//			Map<UUID, Invoice> invoices = n.loadData("""
-//					SELECT * FROM Invoice
-//					""", new LoadInvoice(), conn );
-//			
-//			Map<Invoice, List<InvoiceItem>> invItem = n.groupData("""
-//					SELECT * FROM InvoiceItem
-//					""", new LoadInvoiceItem(), conn);
-//			System.out.println(invItem);
-//////			
-////			
-////	
-//			
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-	/*List<Person> persons = DataLoader.loadPersons();
-	System.out.println("\n--- Persons ---");
-	for(Person p : persons) {
-			System.out.println(p.toString());
-	}
-		
-		
-		
-		List<Address> addresses = DataLoader.loadAddresses();
-		System.out.println("\n--- Addresses ---");
-		for(Address a : addresses) {
-		    System.out.println(a.toString());
-		}
-		
-		
-		List<Company> companies = DataLoader.loadCompanies();
-		System.out.println("\n--- Companies ---");
-		for(Company c : companies) {
-		    System.out.println(c.toString());
-		}
-		
-		List<Item> items = DataLoader.loadItems();
-		System.out.println("\n--- Items ---");
-		for(Item i : items) {
-		    System.out.println(i.toString());		}
-		System.out.println(DataLoader.loadAddressById(1));*/
-		
-		//FileOutputWriter.writeReportsToFile("data/output.txt");
-		
+
 	}
 	
 	
-	}	
+}	
 
