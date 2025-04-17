@@ -30,7 +30,17 @@ public class ReportUtils {
     	try(Connection conn = ConnectionFactory.getConnection()){
     		
     		  invoiceItemMap = dl.groupData("""
-    		  		SELECT * FROM InvoiceItem
+    		  		SELECT invoiceItemId,
+    		  		 	uuid,
+    		  		 	invoiceId,
+    		  		 	itemId,
+    		  		 	typeEquipment,
+    		  		 	price,
+    		  		 	startDate,
+    		  		 	endDate,
+    		  		 	quantity,
+    		  		 	numberOfHours
+    		  		 	FROM InvoiceItem
     		  		""", new LoadInvoiceItem(), conn);
     		  
     		  

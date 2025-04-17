@@ -30,7 +30,14 @@ public class LoadInvoiceItem implements DataMapper<InvoiceItem>{
 	    IDLoader<Invoice> invoiceLoader = new IDLoader<>(map);
 
 	    Invoice inv = invoiceLoader.loadById(
-	        "SELECT * FROM Invoice WHERE invoiceId = ?",
+	        """
+	    		SELECT invoiceId,
+	    		uuid,
+	    		companyId,
+	    		salesPersonId,
+	    		invoiceDate
+	    		FROM Invoice WHERE invoiceId = ?
+	    		""",
 	        rs.getInt("invoiceId"), conn
 	    );
 
