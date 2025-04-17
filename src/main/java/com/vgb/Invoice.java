@@ -128,6 +128,18 @@ return report.toString();
 					
 }
 
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Invoice invoice = (Invoice) o;
+    return invoiceUUID.equals(invoice.invoiceUUID);
+}
+
+@Override
+public int hashCode() {
+    return invoiceUUID.hashCode();
+}
 
 	
 	@Override

@@ -4,9 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.UUID;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.vgb.Address;
+import com.vgb.Company;
+import com.vgb.Invoice;
+import com.vgb.LoadAddress;
+import com.vgb.LoadPerson;
+import com.vgb.Person;
 
 
 
@@ -23,29 +34,138 @@ public class IDLoader <T> {
         this.mapper = mapper;
     }
     
-    public T loadById(String query, int id) {
+    public T loadById(String query, int id, Connection conn) {
     	T entity = null;
-    	Connection conn = null;
+    	
     	
     	try {
     		
-    		conn = ConnectionFactory.getConnection();
     		PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
     		
             if(rs.next()) {
-    			entity = mapper.map(rs);
+    			entity = mapper.map(rs, conn);
     		}
-            ConnectionFactory.closeConnection(conn);
+            rs.close();
+            ps.close();
     		
     	}catch(SQLException e) {
-    		LOGGER.info("Something bad happening loading generic by ID :(", e);
+    		LOGGER.log(Level.ERROR,"Something bad happening loading generic by ID :(", e);
     	}
     	
     	return entity;
     	
     }
     
+    public static Person loadPersonById(int id, Connection conn) {
+    	
+    	Person p = null;
+    	IDLoader<Person> pLoader = new IDLoader<>(new LoadPerson());
+    	p = pLoader.loadById("""
+				SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
+            		FROM Person p JOIN Email e on e.personId = p.personId
+            		WHERE p.personId = ?
+				""", id, conn);
+    	
+    	return p;
+    	
+    }
+    
+    public static Address loadAddressById(int id, Connection conn) {
+    	Address a = null;
+    	
+    	IDLoader<Address> aLoader = new IDLoader<>(new LoadAddress());
+    	
+    	a = aLoader.loadById("""
+          		SELECT a.addressId, a.street, a.city, s.stateName, z.zip
+				FROM Address a
+				JOIN State s ON a.stateId = s.stateId
+				JOIN ZipCode z ON a.zipId = z.zipId
+				WHERE a.addressId = ?
+          		""",id,conn);
+    	
+    	return a;
+    }
+    
+    public static Company loadCompanyById(int companyId, Connection conn) {
+    	Person contact = null;
+    	Address address = null;
+    	Company company = null;
 
+    	
+    	try {
+    		
+    		String query = """
+    				SELECT uuid, companyName, personId, addressId
+    				FROM Company
+    				WHERE companyId = ?
+    				""";
+    		  PreparedStatement ps = conn.prepareStatement(query);
+              ps.setInt(1, companyId);
+              ResultSet rs = ps.executeQuery();
+              if(rs.next()) {
+              UUID uuid = UUID.fromString(rs.getString("uuid"));
+              String name = rs.getString("companyName");
+              int personId = rs.getInt("personId");
+              int addressId = rs.getInt("addressId");
+              
+              contact = IDLoader.loadPersonById(personId, conn);
+
+              address = IDLoader.loadAddressById(addressId, conn);
+              
+              company = new Company(uuid, name, contact, address);
+              } else {
+                  LOGGER.log(Level.ERROR, "No company found with companyId = " + companyId);
+              }
+              
+              
+              
+    	}catch(SQLException e) {
+    		LOGGER.log(Level.ERROR,"COMPANY NOT LOADING BY ID", e);
+    	}
+            return company;
+            
+    }
+    
+    public static Invoice loadInvoiceById(int id, Connection conn) {
+    	Invoice inv = null;
+    	UUID uuid = null;
+    	Company customer = null;
+    	Person salesPerson = null;
+    	LocalDate invoiceDate = null;
+    	try {
+    		String query = """
+    				SELECT i.invoiceId, i.uuid, i.companyId, i.salesPersonId, i.invoiceDate
+    				FROM Invoice i 
+    				WHERE invoiceId = ?
+    				""";
+    		PreparedStatement ps = conn.prepareStatement(query);
+    		ps.setInt(1,id);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		if(rs.next()) {
+    		uuid = UUID.fromString(rs.getString("i.uuid"));
+    		
+    		int customerId = rs.getInt("i.companyId");
+    		int personId = rs.getInt("salesPersonId");
+    		
+    		customer = IDLoader.loadCompanyById(customerId, conn);
+    		
+    		salesPerson = IDLoader.loadPersonById(personId, conn);
+    		
+    		try {
+    			invoiceDate = LocalDate.parse(rs.getString("invoiceDate"));
+    			} catch(DateTimeParseException e) {
+    				throw new RuntimeException(e);
+    			}
+    		}	
+    	}catch(SQLException e) {
+    		LOGGER.log(Level.ERROR,"Bad Connection invoice by id", e);
+    	}
+    
+    	
+    	return new Invoice(uuid, customer, salesPerson, invoiceDate);
+    }
+    
 }

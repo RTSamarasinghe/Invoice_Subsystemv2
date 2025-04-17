@@ -1,14 +1,22 @@
 package com.vgb;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.vgb.database.ConnectionFactory;
 import com.vgb.database.DataLoader;
-import com.vgb.database.LoadCompany;
 
 public class ReportUtils {
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	/**
      * Distributes Invoices and invoiceItems to another map comparing UUID Strings
@@ -16,17 +24,24 @@ public class ReportUtils {
      */
     public static Map<Invoice, List<InvoiceItem>> populateInvoice(){
     	
-    	Map<Invoice, List<InvoiceItem>> invoicesReport = new HashMap<>();
-    	 Map<UUID, Invoice> invoiceMap = InvoiceLoader.loadInvoice();
-    	    Map<UUID, List<InvoiceItem>> invoiceItemMap = InvoiceItemLoader.loadInvoiceItem();
+    	DataLoader dl = new DataLoader();
+    	
+    	Map<Invoice, List<InvoiceItem>> invoiceItemMap = null;
+    	try(Connection conn = ConnectionFactory.getConnection()){
+    		
+    		  invoiceItemMap = dl.groupData("""
+    		  		SELECT * FROM InvoiceItem
+    		  		""", new LoadInvoiceItem(), conn);
+    		  
+    		  
+    	}catch(SQLException e) {
+    		LOGGER.log(Level.ERROR, "Populating invoice connection error", e);
+    	}
+    	
+    	     
     	    
-    	for(UUID i : invoiceMap.keySet()) {
-	    	if(invoiceItemMap.containsKey(i)) {
-	    		
-	    		invoicesReport.put(invoiceMap.get(i), invoiceItemMap.get(i));	    		
-	    	}	    	
-	    }
-    	return invoicesReport;
+    	
+    	return invoiceItemMap;
     	
     	
     }
@@ -65,9 +80,18 @@ public class ReportUtils {
     public static Map<Company, Integer> calculateCompanyInvoiceCount() {
         Map<Invoice, List<InvoiceItem>> invoiceItems = populateInvoice();
         DataLoader dl = new DataLoader();
-        Map<UUID, Company> companies = dl.loadData("""
-        		SELECT * FROM Company
-        		""", new LoadCompany());
+        
+        Map<UUID, Company> companies = null;
+        try(Connection conn = ConnectionFactory.getConnection()){
+        	companies = dl.loadData("""
+            		SELECT * FROM Company
+        	""", new LoadCompany(),conn);
+        }catch(SQLException e) {
+        	LOGGER.log(Level.ERROR, "calculating company bad connection");
+        }
+        
+         
+        		
         Map<Company, Integer> companyInvoiceCounts = new HashMap<>();
         
         for (Company company : companies.values()) {

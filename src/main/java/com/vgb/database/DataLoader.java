@@ -11,12 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.vgb.Company;
 import com.vgb.Person;
 import com.vgb.Address;
 import com.vgb.Item;
+import com.vgb.LoadAddress;
+import com.vgb.LoadPerson;
 import com.vgb.Invoice;
 import com.vgb.InvoiceItem;
 
@@ -40,12 +44,12 @@ public class DataLoader {
      * @param mapper The factory class required to create the relevant POJOs
      * @return Required Map to be used in ReportUtils
      */
-    public <T> Map<UUID,T> loadData(String query, DataMapper<T> mapper) {
-    	Connection conn = null;
+    public <T> Map<UUID,T> loadData(String query, DataMapper<T> mapper, Connection conn) {
+    	
     	try {
     	    conn = ConnectionFactory.getConnection();
     	    }catch (SQLException e) {
-    	    	LOGGER.info("Bad Connection");
+    	    	LOGGER.log(Level.ERROR,"Bad Connection", e);
     	    }
     	
         Map<UUID, T> results = new HashMap<>();
@@ -65,12 +69,12 @@ public class DataLoader {
             while (rs.next()) {
             	
             	UUID uuid = UUID.fromString(rs.getString("uuid"));
-                results.put(uuid, mapper.map(rs));
+                results.put(uuid, mapper.map(rs, conn));
             }
             
             rs.close();
         } catch (SQLException e) {
-            LOGGER.error("Error loading data", e);
+            LOGGER.log(Level.ERROR,"Error loading data", e);
         }
         
     	try {
@@ -78,7 +82,7 @@ public class DataLoader {
 			ConnectionFactory.closeConnection(conn);
 			}
 		} catch (SQLException e) {
-			LOGGER.error("Closing connection no no :(");
+			LOGGER.log(Level.ERROR,"Closing connection no no :(");
 			e.printStackTrace();
 		}
         
@@ -93,19 +97,19 @@ public class DataLoader {
      * @return
      * @throws SQLException
      */
-    public <T> Map<UUID, List<T>> groupData(String query, DataMapper<T> mapper) throws SQLException {
-    	 Connection conn = null;
-    	    Map<UUID, List<T>> results = new HashMap<>();
+    public <T> Map<Invoice, List<T>> groupData(String query, DataMapper<T> mapper, Connection conn) throws SQLException {
+    	 
+    	    Map<Invoice, List<T>> results = new HashMap<>();
 
     	    try {
     	        conn = ConnectionFactory.getConnection();
     	        ResultSet rs = DataFactory.runQuery(query);
 
     	        while (rs.next()) {
-    	            UUID uuid = UUID.fromString(rs.getString("uuid"));
-    	            T item = mapper.map(rs);
+    	            Invoice invoice = IDLoader.loadInvoiceById(rs.getInt("invoiceId"), conn) ;
+    	            T item = mapper.map(rs, conn);
 
-    	            results.computeIfAbsent(uuid, k -> new ArrayList<>()).add(item);
+    	            results.computeIfAbsent(invoice, k -> new ArrayList<>()).add(item);
     	        }
 
     	        rs.close();
@@ -128,13 +132,13 @@ public class DataLoader {
      * @param personId
      * @return Single person object
      */
-    protected static Person loadPersonById(int personId) {
+    public static Person loadPersonById(int personId, Connection conn) {
         Person person = null;
-        Connection conn = null;
+        
         
         try {
-            conn = ConnectionFactory.getConnection();            
-            // First, get the album basic information
+                    
+           
             String query = """
             		SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
             		FROM Person p JOIN Email e on e.personId = p.personId
@@ -192,7 +196,7 @@ public class DataLoader {
                 
             }
             
-            // If rs.next() didn't return true, album will remain null
+            
             
         } catch (SQLException e) {
             LOGGER.info("SQLException: ");
@@ -216,13 +220,13 @@ public class DataLoader {
     
 
     
-    protected static Address loadAddressById(int addressId) {
+    protected static Address loadAddressById(int addressId, Connection conn) {
     	Address address = null;
-    	Connection conn = null;
+    	
     	
     	try {
     		LOGGER.info("Loading addres from DB");
-    		conn = ConnectionFactory.getConnection();
+    		
     		
     		String query = """
     				SELECT a.addressId, a.street, a.city, s.stateName, z.zip
@@ -243,9 +247,7 @@ public class DataLoader {
     			
     			address = new Address(street, city, state, zip);
     		}
-    		ConnectionFactory.closeConnection(conn);
-    		ps.close();
-    		rs.close();
+    		
     		
     	}catch (SQLException e) {
             LOGGER.error("Error loading AN ADDRESS from database", e);
@@ -255,62 +257,12 @@ public class DataLoader {
     }
     
     
-    protected static Company loadCompanyById(int companyId) {
-    	Person contact = null;
-    	Address address = null;
-    	Connection conn = null;
-    	Company company = null;
-    	
-    	LoadPerson p = new LoadPerson();
-    	IDLoader<Person> servPerson = new IDLoader<>(p);
-    	
-    	
-    	try {
-    		conn = ConnectionFactory.getConnection();
-    		String query = """
-    				SELECT uuid, companyName, personId, addressId
-    				FROM Company
-    				WHERE companyId = ?
-    				""";
-    		  PreparedStatement ps = conn.prepareStatement(query);
-              ps.setInt(1, companyId);
-              ResultSet rs = ps.executeQuery();
-              if(rs.next()) {
-              UUID uuid = UUID.fromString(rs.getString("uuid"));
-              String name = rs.getString("companyName");
-              int personId = rs.getInt("personId");
-              
-              
-              contact = servPerson.loadById("""
-              		SELECT p.uuid, p.firstName, p.lastName, p.phoneNumber, e.address
-            		FROM Person p JOIN Email e on e.personId = p.personId
-            		WHERE p.personId = ?
-              		""", personId);
-              
-              
-              address = loadAddressById(rs.getInt("addressId"));
-              company = new Company(uuid, name, contact, address);
-              } else {
-                  LOGGER.error("No company found with companyId = " + companyId);
-              }
-              
-              ConnectionFactory.closeConnection(conn);
-              
-              ps.close();
-              rs.close();
-              
-    	}catch(SQLException e) {
-    		LOGGER.info("COMPANY NOT LOADING BY ID");
-    	}
-            return company;
-            
-    }
+
     
     public Item loadItemById(int itemId) {
     	Item item = null;
     	Connection conn = null;
     	
-    	char itemType;
     	try {
     		conn = ConnectionFactory.getConnection();
     		
@@ -333,16 +285,6 @@ public class DataLoader {
     	return item;
     }
     
-    public Invoice loadInvoiceById(int invoiceId) {
-    	Invoice inv = null;
-    	
-    	return inv;
-    }
-    
-    public InvoiceItem loadInvoiceItemById(int invoiceItemId) {
-    	InvoiceItem it = null;
-    	
-    	return it;
-    }
+
     
 }

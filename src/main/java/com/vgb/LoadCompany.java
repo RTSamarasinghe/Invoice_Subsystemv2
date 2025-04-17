@@ -1,12 +1,13 @@
-package com.vgb.database;
+package com.vgb;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import com.vgb.Address;
-import com.vgb.Company;
-import com.vgb.Person;
+import com.vgb.database.DataLoader;
+import com.vgb.database.DataMapper;
+import com.vgb.database.IDLoader;
 
 /**
  * Utility class to create Company POJO from database 
@@ -14,16 +15,17 @@ import com.vgb.Person;
 public class LoadCompany implements DataMapper<Company> {
 
 	@Override
-	public Company map(ResultSet rs) throws SQLException {
+	public Company map(ResultSet rs, Connection conn) throws SQLException {
 		
 		UUID companyUuid = UUID.fromString(rs.getString("uuid"));
 		String companyName = rs.getString("companyName");
 		
 		Integer personId = rs.getInt("personId");
-		Person contact = DataLoader.loadPersonById(personId);
+		Person contact = IDLoader.loadPersonById(personId, conn);
+		
 		
 		Integer addressId = rs.getInt("addressId");
-		Address address = DataLoader.loadAddressById(addressId);
+		Address address = IDLoader.loadAddressById(addressId, conn);
 		
 		return new Company(companyUuid, companyName, contact, address);
 	}

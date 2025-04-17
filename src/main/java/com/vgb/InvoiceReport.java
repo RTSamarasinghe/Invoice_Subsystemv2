@@ -16,11 +16,6 @@ import com.vgb.database.DataLoader;
 import com.vgb.database.IDLoader;
 
 import org.apache.logging.log4j.LogManager;
-import com.vgb.database.LoadPerson;
-import com.vgb.database.LoadCompany;
-import com.vgb.database.LoadItem;
-import com.vgb.database.LoadInvoice;
-import com.vgb.database.LoadInvoiceItem;
 /*
  * Contains Printing functions for the three reports
  * 
@@ -120,9 +115,9 @@ StringBuilder report = new StringBuilder();
 	
 	public static void main(String[] args) {
 		
-//		 System.out.println(InvoiceReport.printInvoice());
-//		 System.out.println(InvoiceReport.printInvoiceSummary());
-//		System.out.println(InvoiceReport.printCompanySummary());
+		System.out.println(InvoiceReport.printInvoice());
+		System.out.println(InvoiceReport.printInvoiceSummary());
+		System.out.println(InvoiceReport.printCompanySummary());
 		
 		DataLoader dl = new DataLoader();
 		
@@ -165,14 +160,48 @@ StringBuilder report = new StringBuilder();
 //				""", new LoadInvoice());
 //		
 //		System.out.println(invoices);
-		String query = "SELECT * FROM InvoiceItem";
-		try {
-			Map<UUID, List<InvoiceItem>> invoiceItems = dl.groupData(query, new LoadInvoiceItem());
-			System.out.println(invoiceItems);
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
+//		String query = "SELECT * FROM InvoiceItem";
+//		try {
+//			Map<UUID, List<InvoiceItem>> invoiceItems = dl.groupData(query, new LoadInvoiceItem());
+//			System.out.println(invoiceItems);
+//		} catch (SQLException e) {
+//			
+//			e.printStackTrace();
+//		}
+//		
+		
+		DataLoader n = new DataLoader();
+////		try {
+////			
+////			IDLoader<Invoice> idff = new IDLoader<>(new LoadInvoice()); 
+////			Invoice c = idff.loadById("""
+////					SELECT * FROM Invoice WHERE invoiceId = ?
+////					""",4, ConnectionFactory.getConnection());
+////			System.out.println(c.toString());
+////		} catch (SQLException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+//		
+//		try {
+//			
+//			Connection conn = ConnectionFactory.getConnection();
+//			Map<UUID, Invoice> invoices = n.loadData("""
+//					SELECT * FROM Invoice
+//					""", new LoadInvoice(), conn );
+//			
+//			Map<Invoice, List<InvoiceItem>> invItem = n.groupData("""
+//					SELECT * FROM InvoiceItem
+//					""", new LoadInvoiceItem(), conn);
+//			System.out.println(invItem);
+//////			
+////			
+////	
+//			
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	/*List<Person> persons = DataLoader.loadPersons();
 	System.out.println("\n--- Persons ---");

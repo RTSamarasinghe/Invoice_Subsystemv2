@@ -1,5 +1,6 @@
-package com.vgb.database;
+package com.vgb;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -7,29 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.vgb.Contract;
-import com.vgb.Equipment;
-import com.vgb.Invoice;
-import com.vgb.InvoiceItem;
-import com.vgb.Item;
-import com.vgb.Lease;
-import com.vgb.Material;
-import com.vgb.Rental;
+import com.vgb.database.DataMapper;
+import com.vgb.database.IDLoader;
 
 public class LoadInvoiceItem implements DataMapper<InvoiceItem>{
 
 	@Override
-	public InvoiceItem map(ResultSet rs) throws SQLException {
+	public InvoiceItem map(ResultSet rs, Connection conn) throws SQLException {
 
 	    LoadItem mapper = new LoadItem();
 	    IDLoader<Item> service = new IDLoader<>(mapper);
 
 	    UUID uuid = UUID.fromString(rs.getString("uuid"));
 	    char EQType = rs.getString("typeEquipment").charAt(0);
-
 	    Item item = service.loadById(
 	        "SELECT * FROM Item WHERE itemId = ?",
-	        rs.getInt("itemId")
+	        rs.getInt("itemId"), conn
 	    );
 
 	    LoadInvoice map = new LoadInvoice();
@@ -37,7 +31,7 @@ public class LoadInvoiceItem implements DataMapper<InvoiceItem>{
 
 	    Invoice inv = invoiceLoader.loadById(
 	        "SELECT * FROM Invoice WHERE invoiceId = ?",
-	        rs.getInt("invoiceId")
+	        rs.getInt("invoiceId"), conn
 	    );
 
 	    switch (EQType) {

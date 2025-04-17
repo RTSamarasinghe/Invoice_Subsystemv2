@@ -1,5 +1,6 @@
-package com.vgb.database;
+package com.vgb;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -9,9 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.vgb.Company;
-import com.vgb.Invoice;
-import com.vgb.Person;
+import com.vgb.database.DataMapper;
+import com.vgb.database.IDLoader;
 
 public class LoadInvoice implements DataMapper<Invoice> {
 
@@ -23,7 +23,7 @@ public class LoadInvoice implements DataMapper<Invoice> {
 	 * @param The Result set after executing a query using DataFactory
 	 */
 	@Override
-	public Invoice map(ResultSet rs) throws SQLException {
+	public Invoice map(ResultSet rs, Connection conn) throws SQLException {
 		
 		UUID uuid = UUID.fromString(rs.getString("uuid"));
 		int salesPersonId = rs.getInt("salesPersonId");
@@ -39,8 +39,8 @@ public class LoadInvoice implements DataMapper<Invoice> {
 		}
 		
    
-        salesPerson = DataLoader.loadPersonById(salesPersonId);
-        customer = DataLoader.loadCompanyById(companyId);
+        salesPerson = IDLoader.loadPersonById(salesPersonId, conn);
+        customer = IDLoader.loadCompanyById(companyId,conn);
         
 		
 		return new Invoice(uuid,customer, salesPerson, invoiceDate);
