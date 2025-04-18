@@ -3,9 +3,8 @@ package com.vgb;
 
 import java.util.List;
 import java.util.UUID;
-/*
- * Represents a person in the system
- * 
+/**
+ * Represents a Person in the system
  */
 public class Person {
 	

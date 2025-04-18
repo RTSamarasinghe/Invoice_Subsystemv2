@@ -4,13 +4,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
-import com.vgb.database.DataLoader;
 import com.vgb.database.DataMapper;
 import com.vgb.database.IDLoader;
 
 /**
- * Utility class to create Company POJO from database 
+ * Factory class for instantiating {@link Company} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>uuid</li>
+ *   <li>companyName</li>
+ *   <li>personId</li>
+ *   <li>addressId</li>
+ * </ul>
  */
 public class LoadCompany implements DataMapper<Company> {
 

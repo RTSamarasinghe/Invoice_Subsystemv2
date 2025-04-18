@@ -5,14 +5,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
-
 import com.vgb.database.DataMapper;
 import com.vgb.database.IDLoader;
-
+/**
+ * Factory class for instantiating {@link Invoice} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>uuid</li>
+ *   <li>salesPersonId</li>
+ *   <li>companyId</li>
+ *   <li>invoiceDate</li>
+ * </ul>
+ */
 public class LoadInvoice implements DataMapper<Invoice> {
 
 	/**

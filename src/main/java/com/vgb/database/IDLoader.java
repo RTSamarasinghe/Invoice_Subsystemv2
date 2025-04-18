@@ -22,8 +22,12 @@ import com.vgb.Person;
 
 
 /**
- * Service Layer class to help load ONE record from the database
- * @param <T> 
+ * A generic service layer class used to load a single record from the database by ID.
+ *
+ * @param <T> The type of object being loaded. This type must be supported by the provided {@link DataMapper}.
+ *
+ * <p>This class delegates the mapping of the {@link ResultSet} to the {@link DataMapper} implementation
+ * provided during instantiation.
  */
 public class IDLoader <T> {
     private final DataMapper<T> mapper;
@@ -58,6 +62,17 @@ public class IDLoader <T> {
     	
     }
     
+    /**
+     * Loads a {@link Person} from the database using their unique ID.
+     *
+     * <p>This method uses {@link IDLoader} with a {@link LoadPerson} mapper to execute a SQL query
+     * that joins the {@code Person} and {@code Email} tables and maps the result into a {@code Person} object.
+     *
+     * @param id   The unique ID of the person to load.
+     * @param conn The active database connection to use.
+     * @return The {@code Person} object if found, or {@code null} if no matching record exists.
+     */
+
     public static Person loadPersonById(int id, Connection conn) {
     	
     	Person p = null;
@@ -129,7 +144,7 @@ public class IDLoader <T> {
     }
     
     public static Invoice loadInvoiceById(int id, Connection conn) {
-    	Invoice inv = null;
+  
     	UUID uuid = null;
     	Company customer = null;
     	Person salesPerson = null;

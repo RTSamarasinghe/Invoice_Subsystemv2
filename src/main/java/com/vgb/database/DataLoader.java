@@ -72,19 +72,26 @@ public class DataLoader {
     }
     
     /**
-     * Helper method for loading InvoiceItems
-     * @param <T> 
-     * @param rs 
-     * @param mapper
-     * @return Grouped set of Invoice Items under an Invoice
-     * @throws SQLException
+     * Executes an sql query and groups the resulting mapped items by their corresponding {@link Invoice}.
+     *
+     * <p>This method assumes each row in the result set contains an {@code invoiceId} column
+     * that can be used to load the full {@link Invoice} object. Each row is also mapped into an item
+     * of type {@code T} using the provided {@link DataMapper}. The result is a map where each key is
+     * an {@code Invoice}, and the value is a list of associated items.
+     *
+     * @param <T>    The type of the items
+     * @param query  The SQL query to execute.
+     * @param mapper The mapper used to convert each row into an object of type {@code T}.
+     * @param conn   The database connection
+     * @return A map grouping {@code T} items under their corresponding {@code Invoice}.
+     * @throws SQLException If a database access error occurs.
      */
     public <T> Map<Invoice, List<T>> groupData(String query, DataMapper<T> mapper, Connection conn) throws SQLException {
     	 
     	    Map<Invoice, List<T>> results = new HashMap<>();
 
     	    try {
-    	        conn = ConnectionFactory.getConnection();
+   	        
     	        ResultSet rs = DataFactory.runQuery(query);
 
     	        while (rs.next()) {

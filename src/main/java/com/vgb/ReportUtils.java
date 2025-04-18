@@ -14,13 +14,16 @@ import org.apache.logging.log4j.Logger;
 import com.vgb.database.ConnectionFactory;
 import com.vgb.database.DataLoader;
 
+/**
+ * Utility class to populate and calculate totals of the invoices
+ */
 public class ReportUtils {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	/**
      * Distributes Invoices and invoiceItems to another map comparing UUID Strings
-     * @return
+     * @return matched invoiceItems per Invoice
      */
     public static Map<Invoice, List<InvoiceItem>> populateInvoice(){
     	
@@ -121,6 +124,8 @@ public class ReportUtils {
     }
     
     /**
+     * Generates a company summary report of company totals and counts for each company.
+     * 
 	 * Printing and grand Totals logic
 	 * @param companyTotals 
 	 * @param count
@@ -150,11 +155,23 @@ public class ReportUtils {
 		return report.toString();		
 			
 	}
-	/**
-	 * Logic for calculating the totals for invoice Summary
-	 * @return sum of items, taxes and totals of invoices
-	 */
 	
+	
+	/**
+	 * Generates a summary report of invoice totals and counts for each company.
+	 *
+	 * <p>The summary includes:
+	 * <ul>
+	 *   <li>The name of each company</li>
+	 *   <li>The number of invoices associated with that company</li>
+	 *   <li>The total invoice amount for each company</li>
+	 * </ul>
+	 *
+	 * <p>At the end of the report, a grand total line is added, showing the sum of all invoices
+	 * and the total number of invoices across all companies.
+	 *
+	 * @return A formatted string containing the company summary report.
+	 */
 		public static Map<Invoice, double[]> invoiceSummary() {
 		    Map<Invoice, List<InvoiceItem>> invoiceItems = populateInvoice();
 		    Map<Invoice, double[]> summary = new HashMap<>();

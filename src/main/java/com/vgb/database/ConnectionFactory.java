@@ -1,7 +1,6 @@
 package com.vgb.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
@@ -15,9 +14,9 @@ import org.apache.logging.log4j.LogManager;
 public abstract class ConnectionFactory {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static final String URL = "jdbc:mysql://nuros.unl.edu/rsamarasinghe2";
-    public static final String USERNAME = "rsamarasinghe2"; 
-    public static final String PASSWORD = "mohmao4Coaha"; 
+	private static final String URL = "jdbc:mysql://nuros.unl.edu/rsamarasinghe2";
+    private static final String USERNAME = "rsamarasinghe2"; 
+    private static final String PASSWORD = "mohmao4Coaha"; 
 
 	
 	public static Connection getConnection() throws SQLException {
