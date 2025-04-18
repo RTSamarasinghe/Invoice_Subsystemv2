@@ -4,13 +4,25 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.vgb.database.DataMapper;
 import com.vgb.database.IDLoader;
 
+/**
+ * Factory class for instantiating {@link InvoiceItem} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>invoiceItemId</li>
+ *   <li>invoiceId</li>
+ *   <li>itemId</li>
+ *   <li>typeEquipment</li>
+ *   <li>price</li>
+ *   <li>startDate</li>
+ *   <li>endDate</li>
+ *   <li>quantity</li>
+ *   <li>numberOfHours</li>
+ * </ul>
+ */
 public class LoadInvoiceItem implements DataMapper<InvoiceItem>{
 
 	@Override
@@ -18,11 +30,21 @@ public class LoadInvoiceItem implements DataMapper<InvoiceItem>{
 
 	    LoadItem mapper = new LoadItem();
 	    IDLoader<Item> service = new IDLoader<>(mapper);
-
-	    UUID uuid = UUID.fromString(rs.getString("uuid"));
+	    
 	    char EQType = rs.getString("typeEquipment").charAt(0);
 	    Item item = service.loadById(
-	        "SELECT * FROM Item WHERE itemId = ?",
+	        """
+	    		SELECT 
+	    		uuid,
+	    		itemName,
+	    		itemPrice,
+	    		itemType,
+	    		model,
+	    		unit,
+	    		unitPrice,
+	    		customerId
+	    		FROM Item WHERE itemId = ?
+	    	""",
 	        rs.getInt("itemId"), conn
 	    );
 

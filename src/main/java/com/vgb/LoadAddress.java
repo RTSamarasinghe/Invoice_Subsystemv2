@@ -6,6 +6,17 @@ import java.sql.SQLException;
 
 import com.vgb.database.DataMapper;
 
+/**
+ * Factory class for instantiating {@link Address} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>street</li>
+ *   <li>city</li>
+ *   <li>stateName</li>
+ *   <li>zip</li>
+ * </ul>
+ */
 public class LoadAddress implements DataMapper<Address> {
 	
 	

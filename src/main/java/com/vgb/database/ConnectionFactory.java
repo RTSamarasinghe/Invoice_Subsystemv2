@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 
 public abstract class ConnectionFactory {
 	
-	private static final Logger logger = LogManager.getLogger(ConnectionFactory.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	public static final String URL = "jdbc:mysql://nuros.unl.edu/rsamarasinghe2";
     public static final String USERNAME = "rsamarasinghe2"; 
     public static final String PASSWORD = "mohmao4Coaha"; 
@@ -22,11 +23,11 @@ public abstract class ConnectionFactory {
 	public static Connection getConnection() throws SQLException {
         Connection connection = null;
         try {
-            logger.info("Attempting to establish a connection to the database...");
+            LOGGER.log(Level.INFO,"Attempting to establish a connection to the database...");
             connection = DriverManager.getConnection(ConnectionFactory.URL, ConnectionFactory.USERNAME, ConnectionFactory.PASSWORD);
-            logger.info("Connection established successfully.");
+            LOGGER.log(Level.INFO,"Connection established successfully.");
         } catch (SQLException e) {
-            logger.error("Error while establishing database connection.", e);
+            LOGGER.log(Level.ERROR,"Error while establishing database connection.", e);
             throw new SQLException("Error while connecting to the database", e);
         }
         return connection;
@@ -37,9 +38,9 @@ public abstract class ConnectionFactory {
         if (connection != null) {
             try {
                 connection.close();
-                logger.info("Database connection closed successfully.");
+                LOGGER.log(Level.INFO,"Database connection closed successfully.");
             } catch (SQLException e) {
-                logger.error("Error while closing database connection.", e);
+                LOGGER.log(Level.ERROR,"Error while closing database connection.", e);
             }
         }
     }

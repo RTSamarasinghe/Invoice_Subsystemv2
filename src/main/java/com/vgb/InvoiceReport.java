@@ -65,7 +65,7 @@ StringBuilder report = new StringBuilder();
 	    Map<Invoice, double[]> summary = ReportUtils.invoiceSummary();
 	    
 	    report.append("+----------------------------------------------------------------------------------------+ \n");
-	    report.append("| Summary Report - By Total                                                              | \n ");
+	    report.append("| Summary Report - By Total                                                              | \n");
 	    report.append("+----------------------------------------------------------------------------------------+ \n");
 	    report.append(String.format("%-40s %-30s %10s %12s %12s \n", "Invoice #", "Customer", "Num Items", "Tax", "Total"));
 

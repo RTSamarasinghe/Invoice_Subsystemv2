@@ -3,13 +3,27 @@ package com.vgb;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.UUID;
 
 import com.vgb.database.DataLoader;
 import com.vgb.database.DataMapper;
 import com.vgb.database.IDLoader;
 
+/**
+ * Factory class for instantiating {@link Item} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>uuid</li>
+ *   <li>itemName</li>
+ *   <li>itemPrice</li>
+ *   <li>itemType</li>
+ *   <li>model</li>
+ *   <li>unit</li>
+ *   <li>unitPrice</li>
+ *   <li>customerId</li>
+ * </ul>
+ */
 public class LoadItem implements DataMapper<Item> {
 	
 	DataLoader dl = new DataLoader();

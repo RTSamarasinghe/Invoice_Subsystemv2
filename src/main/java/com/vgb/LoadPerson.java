@@ -11,18 +11,20 @@ import java.util.UUID;
 import com.vgb.database.DataMapper;
 
 /**
- * Utility class for object instantiation of a Person from a ResultSet
+ * Factory class for instantiating {@link Person} objects.
+ * <p>
+ * Expects a {@link ResultSet} with the following columns:
+ * <ul>
+ *   <li>uuid</li>
+ *   <li>firstName</li>
+ *   <li>lastName</li>
+ *   <li>phoneNumber</li>
+ *   <li>address</li>
+ * </ul>
  */
 public class LoadPerson implements DataMapper<Person>{
 
 	
-	/**
-	 * 
-	 * Creates a single <code>Person</code> object using DataMappers generic method
-	 * Loose coupled implementation to dynamically load tables from the database 
-	 * 
-	 * @param The Result set after executing a query using DataFactory
-	 */
 	@Override
 	public Person map(ResultSet rs, Connection conn) throws SQLException {
 		
